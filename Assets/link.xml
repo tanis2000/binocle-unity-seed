@@ -1,0 +1,7 @@
+<linker>
+      <assembly fullname="mscorlib">
+              <type fullname="System.AppDomain" preserve="all">
+                      <method name="GetAssemblies"/>
+              </type>
+      </assembly>
+</linker>
