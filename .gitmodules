@@ -1,0 +1,4 @@
+[submodule "Assets/Binocle"]
+	path = Assets/Binocle
+	url = https://github.com/tanis2000/binocle-unity.git
+	branch = master
