@@ -30,7 +30,7 @@ namespace App
 			e.GameObject.transform.SetParent(((App.Game)Game).GUICanvas.transform);
 			newGameText = e.AddComponent<Text>();
 			newGameText.font = Resources.Load<Font>("Fonts/semp");
-			newGameText.text = "NEW GAME";
+			newGameText.text = "TOP DOWN GAME";
 			newGameText.alignment = TextAnchor.MiddleCenter;
 			newGameText.fontSize = 11;
 			newGameText.rectTransform.localPosition = new Vector3(tx, ty, 0);
@@ -40,7 +40,7 @@ namespace App
 			e.GameObject.transform.SetParent(((App.Game)Game).GUICanvas.transform);
 			continueGameText = e.AddComponent<Text>();
 			continueGameText.font = Resources.Load<Font>("Fonts/semp");
-			continueGameText.text = "CONTINUE";
+			continueGameText.text = "PLATFORMER GAME";
 			continueGameText.alignment = TextAnchor.MiddleCenter;
 			continueGameText.fontSize = 11;
 			continueGameText.rectTransform.localPosition = new Vector3(tx, ty, 0);
@@ -99,10 +99,10 @@ namespace App
 			if (Input.GetKeyUp (KeyCode.Space)) {
 				if (selectedMenu == newGameText) {
 					((App.Game)Game).continueSelected = false;
-					((App.Game)Game).gameState = GameState.Play;
+					((App.Game)Game).gameState = GameState.PlayTopDown;
 				} else if (selectedMenu == continueGameText) {
 					((App.Game)Game).continueSelected = true;
-					((App.Game)Game).gameState = GameState.Play;
+					((App.Game)Game).gameState = GameState.PlayPlatformer;
 				} else if (selectedMenu == quitText) {
 					((App.Game)Game).gameState = GameState.Quit;
 				}

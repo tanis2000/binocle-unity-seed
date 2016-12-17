@@ -7,10 +7,9 @@ namespace App
 
     public enum GameState
     {
-        Intro,
         MainMenu,
-        Play,
-        PlayerDead,
+        PlayTopDown,
+        PlayPlatformer,
         GameOver,
         Quit,
         LevelStats
@@ -30,6 +29,7 @@ namespace App
         public Scene Scene;
 
         public bool mainSceneSetup = false;
+        public bool platformerSceneSetup = false;
 
         public bool continueSelected = false;
 
@@ -37,10 +37,11 @@ namespace App
 
         public override void Start()
         {
-            DesignWidth = 240;
-            DesignHeight = 320;
+            DesignWidth = 320;
+            DesignHeight = 240;
             base.Start();
-            EntityFactory.Game = this;
+            TopDown.EntityFactory.Game = this;
+            Platformer.EntityFactory.Game = this;
 
             Version = Utils.GetVersion();
             Debug.LogFormat("Game {0}", Version);
@@ -76,7 +77,7 @@ namespace App
                         }
                     }
                     break;
-                case GameState.Play:
+                case GameState.PlayTopDown:
                     {
 
                         if (Application.isEditor && Input.GetKeyUp(KeyCode.Alpha1))
@@ -87,19 +88,6 @@ namespace App
                         bool newGame = true;
                         if (Scene == null || Scene != MainScene.Instance)
                         {
-                            /*
-    if (Scene != null && Scene == LevelStatsScene.instance)
-    {
-        Debug.Log("next level");
-        newGame = false;
-        StatsManager.instance.currLevel++;
-    }
-    else if (Scene != null && Scene == MainMenuScene.instance && continueSelected)
-    {
-        Debug.Log("continue");
-        StatsManager.instance.score = 0;
-        newGame = false;
-    }*/
                             if (!mainSceneSetup)
                             {
                                 if (Scene != null)
@@ -113,6 +101,26 @@ namespace App
                         }
                     }
                     break;
+
+                case GameState.PlayPlatformer:
+                    {
+                        bool newGame = true;
+                        if (Scene == null || Scene != PlatformerScene.Instance)
+                        {
+                            if (!platformerSceneSetup)
+                            {
+                                if (Scene != null)
+                                {
+                                    Scene.Remove();
+                                }
+                                Scene = CreateScene<PlatformerScene>("PlatformerScene");
+                                PlatformerScene.Instance.Setup(newGame);
+                                platformerSceneSetup = true;
+                            }
+                        }
+                    }
+                    break;
+
                 /*
       case GameState.PlayerDead:
         {

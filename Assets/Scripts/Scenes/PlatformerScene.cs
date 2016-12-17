@@ -5,9 +5,9 @@ using UnityEngine.UI;
 
 namespace App
 {
-    public class MainScene : Scene
+    public class PlatformerScene : Scene
     {
-        public static MainScene Instance;
+        public static PlatformerScene Instance;
 
         public Entity Map;
 
@@ -19,7 +19,7 @@ namespace App
         {
             base.Awake();
             Instance = this;
-            Debug.Log("MainScene - Awake");
+            Debug.Log("PlatformerScene - Awake");
         }
 
         public override void Update()
@@ -28,14 +28,11 @@ namespace App
             if (!SetupDone)
             {
                 // Everything that needs at least the processors to be set up should go in there
-                var level = TopDown.EntityFactory.LoadLevel(1);
-                TopDown.EntityFactory.CreatePlayer();
-                Map = TopDown.EntityFactory.CreateMap(level);
+                var level = Platformer.EntityFactory.LoadLevel(1);
+                Platformer.EntityFactory.CreatePlayer();
+                Map = Platformer.EntityFactory.CreateMap(level);
                 // Hack to force initilization on assignment
-                GetEntityProcessor<TopDown.MapProcessor>().Map = Map.GetComponent<TopDown.MapComponent>();
-                //EntityFactory.CreateStartingUnits(Map);
-                TopDown.EntityFactory.CreateTownHall(new Vector2(2, 7), Map);
-                TopDown.EntityFactory.CreateBoat(new Vector2(8, 0), Map);
+                //GetEntityProcessor<MapProcessor>().Map = Map.GetComponent<MapComponent>();
 
                 SetupDone = true;
             }
@@ -65,15 +62,15 @@ namespace App
             new AudioManager();
 
             // Map stuff
-            AddEntityProcessor(new TopDown.MapProcessor(new Matcher().All(typeof(TopDown.MapComponent))));
+            //AddEntityProcessor(new MapProcessor(new Matcher().All(typeof(MapComponent))));
 
             // Input/logic
-            AddEntityProcessor(new TopDown.InputProcessor(new Matcher().All(typeof(TopDown.InputComponent))));
-            AddEntityProcessor(new TopDown.AIProcessor(new Matcher().All(typeof(TopDown.AIComponent))));
+            //AddEntityProcessor(new InputProcessor(new Matcher().All(typeof(InputComponent))));
+            //AddEntityProcessor(new AIProcessor(new Matcher().All(typeof(AIComponent))));
 
             // Physics
-            AddEntityProcessor(new TopDown.ScaleProcessor(new Matcher().All(typeof(TopDown.ScaleComponent))));
-            AddEntityProcessor(new TopDown.PositionProcessor(new Matcher().All(typeof(TopDown.PositionComponent))));
+            //AddEntityProcessor(new ScaleProcessor(new Matcher().All(typeof(ScaleComponent))));
+            //AddEntityProcessor(new PositionProcessor(new Matcher().All(typeof(PositionComponent))));
             /*			AddEntityProcessor (new PhysicsProcessor ());
                         AddEntityProcessor(new MovementProcessor(new Matcher ().All (typeof(MovementComponent))));
                         AddEntityProcessor(new BouncingProcessor(new Matcher ().All (typeof(BouncingComponent))));			
