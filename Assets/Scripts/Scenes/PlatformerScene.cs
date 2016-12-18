@@ -31,6 +31,8 @@ namespace App
                 var level = Platformer.EntityFactory.LoadLevel(1);
                 Platformer.EntityFactory.CreatePlayer(new Vector2(80, 80));
                 Map = Platformer.EntityFactory.CreateMap(level);
+                Platformer.EntityFactory.CreateGround();
+                Platformer.EntityFactory.CreateCeiling();
                 // Hack to force initilization on assignment
                 //GetEntityProcessor<MapProcessor>().Map = Map.GetComponent<MapComponent>();
 

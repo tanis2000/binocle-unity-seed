@@ -13,6 +13,7 @@ namespace App.Platformer
             e.gameObject.layer = LayerMask.NameToLayer("Heroes");
             e.AddComponent<InputComponent>();
             var move = e.AddComponent<MovementComponent>();
+            move.Acceleration.y = -600;
             move.MaxVelocity = new Vector2(80, 80);
             move.CollisionLayersMask = 1 << LayerMask.NameToLayer("Blocks");
             var sr = e.AddComponent<SpriteRenderer>();
@@ -32,7 +33,31 @@ namespace App.Platformer
             sr.sprite = Utils.CreateBoxSprite(16, 8, new Color(1, 0, 0, 1));
             var c = e.AddComponent<BoxCollider2D>();
             c.size = new Vector2(16, 8);
-            e.transform.position = new Vector2(120, 80);
+            e.transform.position = new Vector2(120, 72);
+            return e;
+        }
+
+        public static Entity CreateGround()
+        {
+            var e = Game.Scene.CreateEntity("ground");
+            e.gameObject.layer = LayerMask.NameToLayer("Blocks");
+            var sr = e.AddComponent<SpriteRenderer>();
+            sr.sprite = Utils.CreateBoxSprite(80, 8, new Color(0, 1, 0, 1));
+            var c = e.AddComponent<BoxCollider2D>();
+            c.size = new Vector2(80, 8);
+            e.transform.position = new Vector2(80, 64);
+            return e;
+        }
+
+        public static Entity CreateCeiling()
+        {
+            var e = Game.Scene.CreateEntity("ceiling");
+            e.gameObject.layer = LayerMask.NameToLayer("Blocks");
+            var sr = e.AddComponent<SpriteRenderer>();
+            sr.sprite = Utils.CreateBoxSprite(80, 8, new Color(0, 1, 0, 1));
+            var c = e.AddComponent<BoxCollider2D>();
+            c.size = new Vector2(80, 8);
+            e.transform.position = new Vector2(24, 80);
             return e;
         }
 

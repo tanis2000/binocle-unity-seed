@@ -14,5 +14,6 @@ namespace App.Platformer
         /// </summary>
         public Vector2 SubPosition;
         public int CollisionLayersMask;
+        public bool Grounded;
     }
 }

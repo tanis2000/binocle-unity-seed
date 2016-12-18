@@ -33,6 +33,10 @@ namespace App.Platformer
             } else {
                 move.Acceleration.x = 0;
             }
+
+            if (input.Jump && !input.WasJump && move.Grounded) {
+                move.Acceleration.y = a;
+            }
 		}
 
 

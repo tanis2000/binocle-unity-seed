@@ -6,29 +6,33 @@ using Binocle.Sprites;
 
 namespace App.Platformer
 {
-	public class MovementProcessor : BaseEntityProcessor
-	{
-		public MovementProcessor (Matcher matcher) : base(matcher)
-		{
-		}
+    public class MovementProcessor : BaseEntityProcessor
+    {
+        private float skin = 0.005f;
 
-		protected override void Begin ()
-		{
-			base.Begin ();
-		}
+        public MovementProcessor(Matcher matcher) : base(matcher)
+        {
+        }
+
+        protected override void Begin()
+        {
+            base.Begin();
+        }
 
 
-		public override void Process (Entity entity)
-		{
-			GameObject go = entity.GameObject;
+        public override void Process(Entity entity)
+        {
+            GameObject go = entity.GameObject;
             MovementComponent move = go.GetComponent<MovementComponent>();
-			var img = go.GetComponentInChildren<SpriteRenderer> ();
+            BoxCollider2D coll = go.GetComponent<BoxCollider2D>();
+            var img = go.GetComponentInChildren<SpriteRenderer>();
             float originalWidth = 1;
             float originalHeight = 1;
-			if (img != null) {
-				originalWidth = img.bounds.size.x;
-				originalHeight = img.bounds.size.y;
-			}
+            if (img != null)
+            {
+                originalWidth = img.bounds.size.x;
+                originalHeight = img.bounds.size.y;
+            }
 
             // Store current position
             move.LastPosition = go.transform.position;
@@ -38,24 +42,26 @@ namespace App.Platformer
             move.Velocity.y = move.Acceleration.y * Time.deltaTime;
 
             // Check for max velocity
-            if (Math.Abs(move.Velocity.x) > Math.Abs(move.MaxVelocity.x)) {
+            if (Math.Abs(move.Velocity.x) > Math.Abs(move.MaxVelocity.x))
+            {
                 move.Velocity.x = move.MaxVelocity.x * Math.Sign(move.Velocity.x);
             }
-            if (Math.Abs(move.Velocity.y) > Math.Abs(move.MaxVelocity.y)) {
+            if (Math.Abs(move.Velocity.y) > Math.Abs(move.MaxVelocity.y))
+            {
                 move.Velocity.y = move.MaxVelocity.y * Math.Sign(move.Velocity.y);
             }
 
             // Handle sub-pixel movement
-			move.SubPosition.x += move.Velocity.x * Time.deltaTime;
-			move.SubPosition.y += move.Velocity.y * Time.deltaTime;
+            move.SubPosition.x += move.Velocity.x * Time.deltaTime;
+            move.SubPosition.y += move.Velocity.y * Time.deltaTime;
 
-			// Compute the integer distance
-			int vxNew = Mathf.RoundToInt(move.SubPosition.x);
-			int vyNew = Mathf.RoundToInt(move.SubPosition.y);
+            // Compute the integer distance
+            int vxNew = Mathf.RoundToInt(move.SubPosition.x);
+            int vyNew = Mathf.RoundToInt(move.SubPosition.y);
 
             // Difference to sum during the next frame
-			move.SubPosition.x -= vxNew;
-			move.SubPosition.y -= vyNew;
+            move.SubPosition.x -= vxNew;
+            move.SubPosition.y -= vyNew;
 
             /*
             long newX = (long)(go.transform.position.x + vxNew);
@@ -130,22 +136,132 @@ namespace App.Platformer
             go.transform.position = pos;
             */
 
-            long newX = (long)(go.transform.position.x + vxNew);
-            long newY = (long)(go.transform.position.y + vyNew);
-            var pos = new Vector2(newX, newY);
+            var pos = go.transform.position;
+            // Resolve any possible collisions below and above the entity.
+            if (vyNew != 0) {
+                vyNew = (int)yAxisCollisions(move, coll, vyNew, Mathf.Sign(vxNew), pos);
+            }
+            // Resolve any possible collisions left and right of the entity.
+            if (vxNew != 0)
+            {
+                vxNew = (int)xAxisCollisions(move, coll, vxNew, pos);
+            }
+            go.transform.position = new Vector2(pos.x + vxNew, pos.y + vyNew);
 
-            var hit = Physics2D.Raycast(go.transform.position, Vector2.right, pos.x-go.transform.position.x+originalWidth/2, move.CollisionLayersMask);
-            Debug.DrawRay(go.transform.position, Vector2.right * (pos.x-go.transform.position.x+originalWidth/2), Color.magenta);
-            if (hit.collider != null) {
-                Debug.Log("Collision");
-                pos.x = hit.point.x - originalWidth/2;
+        }
+
+        private float xAxisCollisions(MovementComponent move, BoxCollider2D coll, float deltaX, Vector3 entityPosition)
+        {
+            bool sideCollision = false;
+            float i;
+            // If we are on the ground, perform just three, normal sized raycasts.
+            if (move.Grounded)
+            {
+                i = 0;
+                // Else, perform a larger range of raycasts that extend slightly outside of
+                // the box collider in order to prevent falling through corners in the Collisions layermask.
+            }
+            else
+            {
+                i = -0.5f;
+            }
+            for (; i < 3; ++i)
+            {
+                float dirX = Mathf.Sign(deltaX);
+
+                float x = entityPosition.x + coll.offset.x + coll.size.x / 2 * dirX - skin * dirX;
+                float y = (entityPosition.y + coll.offset.y - coll.size.y / 2) + coll.size.y / 2 * i;
+                if (i == 0) {
+                    y += skin;
+                } else {
+                    y -= skin;
+                }
+
+                RaycastHit2D hit;
+                Ray2D rayX = new Ray2D(new Vector2(x, y), new Vector2(dirX, 0));
+
+                Debug.DrawRay(rayX.origin, rayX.direction, Color.cyan);
+
+                hit = Physics2D.Raycast(rayX.origin, rayX.direction, Mathf.Abs(deltaX), move.CollisionLayersMask);
+                if (hit.collider != null)
+                {
+                    Debug.Log(hit.point);
+                    Debug.DrawRay(rayX.origin, rayX.direction, Color.red);
+                    deltaX = 0;
+                    sideCollision = true;
+                    break;
+                }
             }
 
-            go.transform.position = pos;
-		}
+            return deltaX;
+        }
 
+        private float yAxisCollisions(MovementComponent move, BoxCollider2D coll, float deltaY, float dirX, Vector3 entityPosition)
+        {
+            move.Grounded = false;
+            // To prevent falling through collision layers by a gap in the corner
+            // if we are facing right, peform y-axis raycasts starting on the right.
+            int facingRight = 1;
+            if (dirX == facingRight)
+            {
+                for (int i = 2; i > -1; --i)
+                {
+                    if (yAxisRaycasts(move, coll, i, ref deltaY, entityPosition))
+                    {
+                        break;
+                    }
+                }
+                // else we are facing left, peform y-axis raycasts starting on the left
+            }
+            else
+            {
+                for (int i = 0; i < 3; ++i)
+                {
+                    if (yAxisRaycasts(move, coll, i, ref deltaY, entityPosition))
+                    {
+                        break;
+                    }
+                }
+            }
 
+            return deltaY;
+        }
 
-	}
+        private bool yAxisRaycasts(MovementComponent move, BoxCollider2D coll, int i, ref float deltaY, Vector3 entityPosition)
+        {
+            float dirY = Mathf.Sign(deltaY);
+            // Start at the left or the right of the boxCollider, depending on the value of i.
+            float x = (entityPosition.x + coll.offset.x - coll.size.x / 2) + coll.size.x / 2 * i;
+            // Bottom or top of boxCollider, depending on if dirY is positive or negative
+            float y = entityPosition.y + coll.offset.y + coll.size.y / 2 * dirY;
+
+            RaycastHit2D hit;
+            Ray2D ray = new Ray2D(new Vector2(x, y), new Vector2(0, dirY));
+
+            Debug.DrawRay(ray.origin, ray.direction, Color.magenta);
+
+            hit = Physics2D.Raycast(ray.origin, ray.direction, Mathf.Abs(deltaY), move.CollisionLayersMask);
+            if (hit.collider != null)
+            {
+                Debug.DrawRay(ray.origin, ray.direction, Color.yellow);
+                // Get Distance between entity and ground
+                float distance = Vector2.Distance(ray.origin, hit.point);
+                // Stop entity's downward movement after coming within skin width of a boxCollider
+                if (distance > skin)
+                {
+                    deltaY = distance * dirY;// + skin;
+                }
+                else
+                {
+                    deltaY = 0;
+                }
+                move.Grounded = true;
+                return true;
+            }
+
+            return false;
+        }
+
+    }
 }
 
