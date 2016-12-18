@@ -29,7 +29,7 @@ namespace App
             {
                 // Everything that needs at least the processors to be set up should go in there
                 var level = Platformer.EntityFactory.LoadLevel(1);
-                Platformer.EntityFactory.CreatePlayer();
+                Platformer.EntityFactory.CreatePlayer(new Vector2(80, 80));
                 Map = Platformer.EntityFactory.CreateMap(level);
                 // Hack to force initilization on assignment
                 //GetEntityProcessor<MapProcessor>().Map = Map.GetComponent<MapComponent>();
@@ -65,14 +65,16 @@ namespace App
             //AddEntityProcessor(new MapProcessor(new Matcher().All(typeof(MapComponent))));
 
             // Input/logic
-            //AddEntityProcessor(new InputProcessor(new Matcher().All(typeof(InputComponent))));
+            AddEntityProcessor(new Platformer.InputProcessor(new Matcher().All(typeof(Platformer.InputComponent))));
             //AddEntityProcessor(new AIProcessor(new Matcher().All(typeof(AIComponent))));
+            AddEntityProcessor(new Platformer.PlayerControlProcessor(new Matcher().All(typeof(Platformer.PlayerControlComponent))));
 
             // Physics
             //AddEntityProcessor(new ScaleProcessor(new Matcher().All(typeof(ScaleComponent))));
             //AddEntityProcessor(new PositionProcessor(new Matcher().All(typeof(PositionComponent))));
-            /*			AddEntityProcessor (new PhysicsProcessor ());
-                        AddEntityProcessor(new MovementProcessor(new Matcher ().All (typeof(MovementComponent))));
+            //AddEntityProcessor (new PhysicsProcessor ());
+            AddEntityProcessor(new Platformer.MovementProcessor(new Matcher ().All (typeof(Platformer.MovementComponent))));
+                        /*
                         AddEntityProcessor(new BouncingProcessor(new Matcher ().All (typeof(BouncingComponent))));			
 
                         // Death stuff
