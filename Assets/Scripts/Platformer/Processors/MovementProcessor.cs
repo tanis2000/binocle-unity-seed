@@ -235,6 +235,12 @@ namespace App.Platformer
             // Bottom or top of boxCollider, depending on if dirY is positive or negative
             float y = entityPosition.y + coll.offset.y + coll.size.y / 2 * dirY;
 
+            if (i == 0) {
+                x += skin;
+            } else {
+                x -= skin;
+            }
+
             RaycastHit2D hit;
             Ray2D ray = new Ray2D(new Vector2(x, y), new Vector2(0, dirY));
 
@@ -243,6 +249,7 @@ namespace App.Platformer
             hit = Physics2D.Raycast(ray.origin, ray.direction, Mathf.Abs(deltaY), move.CollisionLayersMask);
             if (hit.collider != null)
             {
+                Debug.Log(ray.origin + " - " + ray.direction + " - " + hit.point);
                 Debug.DrawRay(ray.origin, ray.direction, Color.yellow);
                 // Get Distance between entity and ground
                 float distance = Vector2.Distance(ray.origin, hit.point);
