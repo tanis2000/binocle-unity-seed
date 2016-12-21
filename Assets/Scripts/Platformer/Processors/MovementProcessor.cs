@@ -24,36 +24,15 @@ namespace App.Platformer
         {
             GameObject go = entity.GameObject;
             MovementComponent move = go.GetComponent<MovementComponent>();
+            ScaleComponent scale = go.GetComponent<ScaleComponent>();
             BoxCollider2D coll = go.GetComponent<BoxCollider2D>();
-            var img = go.GetComponentInChildren<SpriteRenderer>();
-            float originalWidth = 1;
-            float originalHeight = 1;
-            if (img != null)
-            {
-                originalWidth = img.bounds.size.x;
-                originalHeight = img.bounds.size.y;
-            }
 
             // Store current position
             move.LastPosition = go.transform.position;
 
-            // Update velocity
-            move.Velocity.x = move.Acceleration.x * Time.deltaTime;
-            move.Velocity.y = move.Acceleration.y * Time.deltaTime;
-
-            // Check for max velocity
-            if (Math.Abs(move.Velocity.x) > Math.Abs(move.MaxVelocity.x))
-            {
-                move.Velocity.x = move.MaxVelocity.x * Math.Sign(move.Velocity.x);
-            }
-            if (Math.Abs(move.Velocity.y) > Math.Abs(move.MaxVelocity.y))
-            {
-                move.Velocity.y = move.MaxVelocity.y * Math.Sign(move.Velocity.y);
-            }
-
             // Handle sub-pixel movement
-            move.SubPosition.x += move.Velocity.x * Time.deltaTime;
-            move.SubPosition.y += move.Velocity.y * Time.deltaTime;
+            move.SubPosition.x += move.Velocity.x * Time.deltaTime * 45;
+            move.SubPosition.y += move.Velocity.y * Time.deltaTime * 45;
 
             // Compute the integer distance
             int vxNew = Mathf.RoundToInt(move.SubPosition.x);
@@ -96,7 +75,7 @@ namespace App.Platformer
             }
             */
 
-            /*
+            
             var pos = go.transform.position;
             //movimento l'ogggetto in Y  pixel per pixel fino al termine della velocità o
 			//fino alla collisione con un altro oggetto che non si può muovere
@@ -106,7 +85,7 @@ namespace App.Platformer
 				int vyABS = Mathf.Abs(vyNew);
 				for (int i = 0; i < vyABS; i++)
 				{
-					bool collided = PixelCollisions.Collide(pos.x, pos.y, originalWidth, originalHeight, top? DirectionUnit.Top : DirectionUnit.Bottom, move.CollisionLayersMask);
+					bool collided = PixelCollisions.Collide(pos.x, pos.y, move.OriginalWidth, move.OriginalHeight, top? DirectionUnit.Top : DirectionUnit.Bottom, move.CollisionLayersMask);
 					if(collided){
 						move.Velocity.y = 0;
 						break;
@@ -122,7 +101,7 @@ namespace App.Platformer
 				int vxABS = Mathf.Abs(vxNew);
 				for (int i = 0; i < vxABS ; i++)
 				{
-					bool collided = PixelCollisions.Collide(pos.x, pos.y, originalWidth, originalHeight, right? DirectionUnit.Right : DirectionUnit.Left, move.CollisionLayersMask);
+					bool collided = PixelCollisions.Collide(pos.x, pos.y, move.OriginalWidth, move.OriginalHeight, right? DirectionUnit.Right : DirectionUnit.Left, move.CollisionLayersMask);
 
 					if(collided){
 						move.Velocity.x = 0;
@@ -134,8 +113,22 @@ namespace App.Platformer
 			}
 
             go.transform.position = pos;
-            */
+            go.transform.localScale = scale.Scale;
+            
+            move.OnGroundPrev = move.BottomCollided;
+			move.OnTopPrev = move.TopCollided;
+			move.OnLeftPrev = move.LeftCollided;
+			move.OnRightPrev = move.RightCollided;
+			move.OnLadderPrev = move.LadderCollided;
+			move.BottomCollided = PixelCollisions.Collide(go.transform.position.x,go.transform.position.y,move.OriginalWidth,move.OriginalHeight,DirectionUnit.Bottom,move.CollisionLayersMask);
+			move.LeftCollided = PixelCollisions.Collide(go.transform.position.x,go.transform.position.y,move.OriginalWidth,move.OriginalHeight,DirectionUnit.Left,move.CollisionLayersMask);
+			move.TopCollided =  PixelCollisions.Collide(go.transform.position.x,go.transform.position.y,move.OriginalWidth,move.OriginalHeight,DirectionUnit.Top,move.CollisionLayersMask);
+			move.RightCollided = PixelCollisions.Collide(go.transform.position.x,go.transform.position.y,move.OriginalWidth,move.OriginalHeight,DirectionUnit.Right,move.CollisionLayersMask);
+            //Bounds b = go.GetComponent<Collider2D>().bounds;
+			//move.LadderCollided = Physics2D.OverlapArea(b.min, b.max, laddersMask) != null ? true : false;
 
+
+            /*
             var pos = go.transform.position;
             // Resolve any possible collisions below and above the entity.
             if (vyNew != 0) {
@@ -147,7 +140,7 @@ namespace App.Platformer
                 vxNew = (int)xAxisCollisions(move, coll, vxNew, pos);
             }
             go.transform.position = new Vector2(pos.x + vxNew, pos.y + vyNew);
-
+            */
         }
 
         private float xAxisCollisions(MovementComponent move, BoxCollider2D coll, float deltaX, Vector3 entityPosition)
