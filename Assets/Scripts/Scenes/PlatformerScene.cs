@@ -1,3 +1,4 @@
+using App.Platformer.Map;
 using Binocle;
 using Binocle.Processors;
 using UnityEngine;
@@ -9,11 +10,13 @@ namespace App
     {
         public static PlatformerScene Instance;
 
-        public Entity Map;
+        public Entity MapEntity;
 
         public bool SetupDone = false;
 
         public Text VersionText;
+        public Map Map;
+        public Entity Hero;
 
         public override void Awake()
         {
@@ -29,10 +32,11 @@ namespace App
             {
                 // Everything that needs at least the processors to be set up should go in there
                 var level = Platformer.EntityFactory.LoadLevel(1);
-                Platformer.EntityFactory.CreatePlayer(new Vector2(80, 80));
-                Map = Platformer.EntityFactory.CreateMap(level);
-                Platformer.EntityFactory.CreateGround();
-                Platformer.EntityFactory.CreateCeiling();
+                Map = new Map();
+                Map.Level = level;
+                MapEntity = Platformer.EntityFactory.CreateMap(Map);
+                Hero = Platformer.EntityFactory.CreatePlayer(MapEntity, Map.PlayerSpawnPosition);
+                Platformer.EntityFactory.CreateCamera(Hero.gameObject.transform);
                 // Hack to force initilization on assignment
                 //GetEntityProcessor<MapProcessor>().Map = Map.GetComponent<MapComponent>();
 
