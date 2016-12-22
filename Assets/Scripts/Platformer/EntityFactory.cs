@@ -49,6 +49,17 @@ namespace App.Platformer
                     {
                         map.PlayerSpawnPosition = new Vector2(x * 8, (map.Level.Height - 1 - y) * 8);
                     }
+                    else if (map.Level.Tiles[x + y * map.Level.Width] == 3) {
+                        var en = Game.Scene.CreateEntity(string.Format("moving-{0}-{1}", x, y));
+                        en.SetParent(e);
+                        en.gameObject.layer = LayerMask.NameToLayer("Blocks");
+                        var sr = en.AddComponent<SpriteRenderer>();
+                        sr.sprite = Utils.CreateBoxSprite(8, 8, new Color(0, 1, 1, 1));
+                        var c = en.AddComponent<BoxCollider2D>();
+                        c.size = new Vector2(8, 8);
+                        en.AddComponent<SolidComponent>();
+                        en.transform.localPosition = new Vector2(x * 8, (map.Level.Height - 1 - y) * 8);
+                    }
                 }
             }
             return e;
