@@ -8,7 +8,6 @@ namespace App.Platformer
         // Movement
         private InputComponent input;
         private ScaleComponent scale;
-        private Collider2D coll;
 
 		private float groundAccel = 1.00f;
 		private float groundFric  = 3.00f;
@@ -42,7 +41,6 @@ namespace App.Platformer
             base.Start();
             input = GetComponent<InputComponent>();
             scale = GetComponentInChildren<ScaleComponent>();
-            coll = GetComponent<Collider2D>();
         }
         
         void Update()
@@ -193,6 +191,7 @@ namespace App.Platformer
             MoveV(Velocity.y * Time.deltaTime * 45);
 
             scale.transform.localScale = scale.Scale;
+
             OnGroundPrev = BottomCollided;
 			OnTopPrev = TopCollided;
 			OnLeftPrev = LeftCollided;

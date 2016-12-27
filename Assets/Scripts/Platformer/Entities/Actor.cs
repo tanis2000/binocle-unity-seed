@@ -8,11 +8,13 @@ namespace App.Platformer
     {
         private Vector2 SubPixelCounter = Vector2.zero;
         private Vector2 tempPos = Vector2.zero;
+        protected Collider2D coll;
 
         protected override void Start()
         {
             base.Start();
             tempPos = transform.position;
+            coll = GetComponent<Collider2D>();
         }
 
         public virtual bool IsRiding(Solid solid)
@@ -36,11 +38,11 @@ namespace App.Platformer
                 SubPixelCounter.x -= dx;
                 while (dx != 0)
                 {
-                    Collider2D coll = PixelCollisions.CollideCheck(transform.position.x + dir, transform.position.y, 8, 8, CollisionLayersMask);
-                    if (coll != null)
+                    Collider2D c = PixelCollisions.CollideCheck(transform.position.x + dir, transform.position.y, coll.bounds.size.x, coll.bounds.size.y, CollisionLayersMask);
+                    if (c != null)
                     {
-                        Debug.Log("Collision with " + coll.name + " " + dir);
-                        Entity entity = coll.GetComponent<Entity>();
+                        Debug.Log("Collision with " + c.name + " " + dir);
+                        Entity entity = c.GetComponent<Entity>();
                         SubPixelCounter.x = 0f;
                         if (onCollide != null)
                         {
@@ -67,11 +69,11 @@ namespace App.Platformer
                 SubPixelCounter.y -= dy;
                 while (dy != 0)
                 {
-                    Collider2D coll = PixelCollisions.CollideCheck(transform.position.x, transform.position.y + 1, 8, 8, CollisionLayersMask);
-                    if (coll != null)
+                    Collider2D c = PixelCollisions.CollideCheck(transform.position.x, transform.position.y + 1, coll.bounds.size.x, coll.bounds.size.y, CollisionLayersMask);
+                    if (c != null)
                     {
-                        Debug.Log("Collision with " + coll.name);
-                        entity = coll.GetComponent<Entity>();
+                        Debug.Log("Collision with " + c.name);
+                        entity = c.GetComponent<Entity>();
                         SubPixelCounter.y = 0f;
                         if (onCollide != null)
                         {
@@ -90,11 +92,11 @@ namespace App.Platformer
                 SubPixelCounter.y -= dy;
                 while (dy != 0)
                 {
-                    Collider2D coll = PixelCollisions.CollideCheck(transform.position.x, transform.position.y - 1, 8, 8, CollisionLayersMask);
-                    if (coll != null)
+                    Collider2D c = PixelCollisions.CollideCheck(transform.position.x, transform.position.y - 1, coll.bounds.size.x, coll.bounds.size.y, CollisionLayersMask);
+                    if (c != null)
                     {
-                        Debug.Log("Collision with " + coll.name);
-                        entity = coll.GetComponent<Entity>();
+                        Debug.Log("Collision with " + c.name);
+                        entity = c.GetComponent<Entity>();
                         SubPixelCounter.y = 0f;
                         if (onCollide != null)
                         {
