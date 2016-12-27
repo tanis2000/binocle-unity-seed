@@ -9,18 +9,19 @@ namespace App.Platformer
         public static Game Game;
         public static Entity CreatePlayer(Entity parent, Vector2 startingPosition)
         {
-            var e = Game.Scene.CreateEntity("player");
+            var e = Game.Scene.CreateEntity<Hero>("player");
             e.SetParent(parent);
             e.gameObject.layer = LayerMask.NameToLayer("Heroes");
             e.AddComponent<InputComponent>();
-            var move = e.AddComponent<MovementComponent>();
-            move.MaxVelocity = new Vector2(80, 80);
-            move.CollisionLayersMask = 1 << LayerMask.NameToLayer("Blocks");
+            e.CollisionLayersMask = 1 << LayerMask.NameToLayer("Blocks");
+            //var move = e.AddComponent<MovementComponent>();
+            //move.MaxVelocity = new Vector2(80, 80);
+            //move.CollisionLayersMask = 1 << LayerMask.NameToLayer("Blocks");
             var sr = e.AddComponent<SpriteRenderer>();
             sr.sprite = Utils.CreateBoxSprite(8, 8, new Color(1, 1, 1, 1));
             var c = e.AddComponent<BoxCollider2D>();
             c.size = new Vector2(8, 8);
-            e.AddComponent<PlayerControlComponent>();
+            //e.AddComponent<PlayerControlComponent>();
             e.AddComponent<ScaleComponent>();
             e.transform.localPosition = startingPosition;
             return e;
