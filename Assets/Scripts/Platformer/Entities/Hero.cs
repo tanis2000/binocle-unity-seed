@@ -41,7 +41,7 @@ namespace App.Platformer
         {
             base.Start();
             input = GetComponent<InputComponent>();
-            scale = GetComponent<ScaleComponent>();
+            scale = GetComponentInChildren<ScaleComponent>();
             coll = GetComponent<Collider2D>();
         }
         
@@ -192,7 +192,7 @@ namespace App.Platformer
             MoveH(Velocity.x * Time.deltaTime * 45);
             MoveV(Velocity.y * Time.deltaTime * 45);
 
-            transform.localScale = scale.Scale;
+            scale.transform.localScale = scale.Scale;
             OnGroundPrev = BottomCollided;
 			OnTopPrev = TopCollided;
 			OnLeftPrev = LeftCollided;

@@ -61,12 +61,13 @@ namespace App.Platformer
             Entity entity;
             SubPixelCounter.y += moveV;
             int dy = (int) Math.Round((double) SubPixelCounter.y);
-            if (dy < 0)
+            // Moving upwards
+            if (dy > 0)
             {
                 SubPixelCounter.y -= dy;
                 while (dy != 0)
                 {
-                    Collider2D coll = PixelCollisions.CollideCheck(transform.position.x, transform.position.y -1, 8, 8, CollisionLayersMask);
+                    Collider2D coll = PixelCollisions.CollideCheck(transform.position.x, transform.position.y + 1, 8, 8, CollisionLayersMask);
                     if (coll != null)
                     {
                         Debug.Log("Collision with " + coll.name);
@@ -78,17 +79,18 @@ namespace App.Platformer
                         }
                         return true;
                     }
-                    tempPos.y += -1f;
+                    tempPos.y += 1f;
                     transform.position = tempPos;
-                    dy -= -1;
+                    dy -= 1;
                 }
             }
-            else if (dy > 0)
+            // Moving downwards
+            else if (dy < 0)
             {
                 SubPixelCounter.y -= dy;
                 while (dy != 0)
                 {
-                    Collider2D coll = PixelCollisions.CollideCheck(transform.position.x, transform.position.y +1, 8, 8, CollisionLayersMask);
+                    Collider2D coll = PixelCollisions.CollideCheck(transform.position.x, transform.position.y - 1, 8, 8, CollisionLayersMask);
                     if (coll != null)
                     {
                         Debug.Log("Collision with " + coll.name);
@@ -111,9 +113,9 @@ namespace App.Platformer
                         return true;
                     }
                     */
-                    tempPos.y++;
+                    tempPos.y -= 1;
                     transform.position = tempPos;
-                    dy--;
+                    dy -= 1;
                 }
             }
             return false;

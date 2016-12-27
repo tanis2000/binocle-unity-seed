@@ -14,15 +14,13 @@ namespace App.Platformer
             e.gameObject.layer = LayerMask.NameToLayer("Heroes");
             e.AddComponent<InputComponent>();
             e.CollisionLayersMask = 1 << LayerMask.NameToLayer("Blocks");
-            //var move = e.AddComponent<MovementComponent>();
-            //move.MaxVelocity = new Vector2(80, 80);
-            //move.CollisionLayersMask = 1 << LayerMask.NameToLayer("Blocks");
-            var sr = e.AddComponent<SpriteRenderer>();
+            var ce = Game.Scene.CreateEntity("sprite");
+            ce.SetParent(e);
+            var sr = ce.AddComponent<SpriteRenderer>();
             sr.sprite = Utils.CreateBoxSprite(8, 8, new Color(1, 1, 1, 1));
             var c = e.AddComponent<BoxCollider2D>();
             c.size = new Vector2(8, 8);
-            //e.AddComponent<PlayerControlComponent>();
-            e.AddComponent<ScaleComponent>();
+            ce.AddComponent<ScaleComponent>();
             e.transform.localPosition = startingPosition;
             return e;
         }
