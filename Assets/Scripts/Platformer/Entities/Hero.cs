@@ -36,6 +36,8 @@ namespace App.Platformer
 
         public Vector2 Velocity = Vector2.zero;
 
+        public bool Dead { get; private set; }
+
         protected override void Start()
         {
             base.Start();
@@ -203,5 +205,90 @@ namespace App.Platformer
 			RightCollided = PixelCollisions.Collide(transform.position.x,transform.position.y,coll.bounds.size.x,coll.bounds.size.y,DirectionUnit.Right,CollisionLayersMask);
 
         }
+
+
+        public override void OnSquishDown(Solid platform)
+        {
+            DoSquish(platform as Solid, Vector2.down);
+        }
+
+        public override void OnSquishLeft(Solid platform)
+        {
+            DoSquish(platform as Solid, Vector2.left);
+        }
+
+        public override void OnSquishRight(Solid platform)
+        {
+            DoSquish(platform as Solid, Vector2.right);
+        }
+
+        public override void OnSquishUp(Solid platform)
+        {
+            DoSquish(platform as Solid, Vector2.up);
+        }
+        
+        private void DoSquish(Solid solid, Vector2 direction)
+        {
+            Debug.Log(direction);
+            /*
+            var coll = Solid.Mover.GetComponent<Collider2D>();
+            tempPos = transform.position;
+            tempPos.x += direction.x * 8;
+            tempPos.y += direction.y * 8;
+            transform.position = tempPos;
+            */
+            /*
+            if (!Dead)
+            {
+                var coll = Solid.Mover.GetComponent<Collider2D>();
+                coll.enabled = true;
+                for (int i = 0; i <= 2; i++)
+                {
+                    for (int j = 0; j <= 2; j++)
+                    {
+                        if ((i != 0) || (j != 0))
+                        {
+                            for (int k = -1; k <= 1; k += 2)
+                            {
+                                for (int m = -1; m <= 1; m += 2)
+                                {
+                                    int dx = (i * 3) * k;
+                                    int dy = (j * 3) * m;
+                                    Debug.Log(dx);
+                                    var c = GetComponent<Collider2D>();
+                                    if (!PixelCollisions.CollideCheck(transform.position.x + dx, transform.position.y + dy, c.bounds.size.x, c.bounds.size.y, CollisionLayersMask, coll))
+                                    {
+                                        tempPos = transform.position;
+                                        tempPos.x += dx;
+                                        tempPos.y += dy;
+                                        transform.position = tempPos;
+                                        if (dx != 0)
+                                        {
+                                            MoveExactH(-dx, null);
+                                        }
+                                        if (dy != 0)
+                                        {
+                                            MoveExactV(-dy, null);
+                                        }
+                                        coll.enabled = false;
+                                        return;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                Die();
+                coll.enabled = false;
+            }
+            */
+        }
+
+        public void Die()
+        {
+            Dead = true;
+            Debug.Log("DEAD!");
+        }
+
     }
 }

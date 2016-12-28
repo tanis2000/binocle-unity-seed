@@ -71,7 +71,7 @@ namespace App.Platformer
         {
             var oc = other.GetComponent<Collider2D>();
             var coll = GetComponent<Collider2D>();
-            return PixelCollisions.CollideCheck(transform.position.x, transform.position.y + y, coll.bounds.size.x, coll.bounds.size.y, CollisionLayersMask, oc);
+            return PixelCollisions.CollideCheck(transform.position.x + x, transform.position.y + y, coll.bounds.size.x, coll.bounds.size.y, CollisionLayersMask, oc);
         }
 
         public void Flash()

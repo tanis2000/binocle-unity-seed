@@ -7,11 +7,11 @@ namespace App.Platformer
     public class Actor : GameEntity
     {
         private Vector2 SubPixelCounter = Vector2.zero;
-        private Vector2 tempPos = Vector2.zero;
+        protected Vector2 tempPos = Vector2.zero;
         protected Collider2D coll;
 
         public bool FinishPushOnSquish;
-        public bool NaivePush;
+        public bool NaivePush = false;
         public bool Pushable = true;
 
         public virtual bool FinishPushOnSquishRiding

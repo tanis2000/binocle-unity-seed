@@ -42,15 +42,16 @@ namespace App.Platformer
         {
             Mover = this;
             SubPixelCounter += moveAmount;
-            int move = (int) Math.Round((double) SubPixelCounter.x);
-            int num2 = (int) Math.Round((double) SubPixelCounter.y);
-            if ((move != 0) || (num2 != 0))
+            int dx = (int) Math.Round((double) SubPixelCounter.x);
+            int dy = (int) Math.Round((double) SubPixelCounter.y);
+            if ((dx != 0) || (dy != 0))
             {
                 riding.Clear();
-                foreach (Actor actor in FindObjectsOfType(typeof(Actor)))
+                foreach (Actor actor in FindObjectsOfType<Actor>())
                 {
                     if (actor.IsRiding(this))
                     {
+                        Debug.Log("riding");
                         riding.Add(actor);
                         if (actor.FinishPushOnSquishRiding == this)
                         {
@@ -58,14 +59,14 @@ namespace App.Platformer
                         }
                     }
                 }
-                coll.enabled = false;
-                if (move != 0)
+                //coll.enabled = false;
+                if (dx != 0)
                 {
-                    SubPixelCounter.x -= move;
+                    SubPixelCounter.x -= dx;
                     tempPos = transform.position;
-                    tempPos.x += move;
+                    tempPos.x += dx;
                     transform.position = tempPos;
-                    if (move > 0)
+                    if (dx > 0)
                     {
                         foreach (Actor actor in FindObjectsOfType(typeof(Actor)))
                         {
@@ -76,7 +77,7 @@ namespace App.Platformer
                                 if (actor.NaivePush)
                                 {
                                     tempPos = actor.transform.position;
-                                    tempPos.x += move;
+                                    tempPos.x += dx;
                                     actor.transform.position = tempPos;
                                 }
                                 else
@@ -88,7 +89,7 @@ namespace App.Platformer
                             }
                             else if (riding.Contains(actor))
                             {
-                                actor.MoveExactH(move, null);
+                                actor.MoveExactH(dx, null);
                             }
                             actor.DisableSolids();
                         }
@@ -104,31 +105,32 @@ namespace App.Platformer
                                 if (actor.NaivePush)
                                 {
                                     tempPos = actor.transform.position;
-                                    tempPos.x += move;
+                                    tempPos.x += dx;
                                     actor.transform.position = tempPos;
                                 }
                                 else
                                 {
                                     var right = actor.transform.position.x + ac.bounds.extents.x;
                                     var left = transform.position.x - coll.bounds.extents.x;
+                                    //Debug.Log("sp: " + transform.position.x + "ap: " + actor.transform.position.x + " sext: " + coll.bounds.extents.x + " aext: " + ac.bounds.extents.x + " Right: " + right + " Left: " + left);
                                     actor.MoveExactH((int) (left - right), new Action<Solid>(actor.OnSquishLeft));
                                 }
                             }
                             else if (riding.Contains(actor))
                             {
-                                actor.MoveExactH(move, null);
+                                actor.MoveExactH(dx, null);
                             }
                             actor.DisableSolids();
                         }
                     }
                 }
-                if (num2 != 0)
+                if (dy != 0)
                 {
-                    SubPixelCounter.y -= num2;
+                    SubPixelCounter.y -= dy;
                     tempPos = transform.position;
-                    tempPos.y += num2;
+                    tempPos.y += dy;
                     transform.position = tempPos;
-                    if (num2 > 0)
+                    if (dy > 0)
                     {
                         foreach (Actor actor in FindObjectsOfType(typeof(Actor)))
                         {
@@ -139,7 +141,7 @@ namespace App.Platformer
                                 if (actor.NaivePush)
                                 {
                                     tempPos = actor.transform.position;
-                                    tempPos.y += num2;
+                                    tempPos.y += dy;
                                     actor.transform.position = tempPos;
                                 }
                                 else
@@ -151,7 +153,7 @@ namespace App.Platformer
                             }
                             else if (riding.Contains(actor))
                             {
-                                actor.MoveExactV(num2, null);
+                                actor.MoveExactV(dy, null);
                             }
                             actor.DisableSolids();
                         }
@@ -167,7 +169,7 @@ namespace App.Platformer
                                 if (actor.NaivePush)
                                 {
                                     tempPos = actor.transform.position;
-                                    tempPos.y += num2;
+                                    tempPos.y += dy;
                                     actor.transform.position = tempPos;
                                 }
                                 else
@@ -179,7 +181,7 @@ namespace App.Platformer
                             }
                             else if (riding.Contains(actor))
                             {
-                                actor.MoveExactV(num2, null);
+                                actor.MoveExactV(dy, null);
                             }
                             actor.DisableSolids();
                         }
@@ -192,7 +194,7 @@ namespace App.Platformer
                         actor.FinishPushOnSquish = false;
                     }
                 }
-                coll.enabled = true;
+                //coll.enabled = true;
             }
             Mover = null;
         }

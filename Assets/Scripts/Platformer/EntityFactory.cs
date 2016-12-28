@@ -52,6 +52,7 @@ namespace App.Platformer
                         var en = Game.Scene.CreateEntity<MovingPlatform>(string.Format("moving-{0}-{1}", x, y));
                         en.SetParent(e);
                         en.gameObject.layer = LayerMask.NameToLayer("Blocks");
+                        en.CollisionLayersMask = 1 << LayerMask.NameToLayer("Heroes");
                         var sr = en.AddComponent<SpriteRenderer>();
                         sr.sprite = Utils.CreateBoxSprite(8, 8, new Color(0, 1, 1, 1));
                         var c = en.AddComponent<BoxCollider2D>();
