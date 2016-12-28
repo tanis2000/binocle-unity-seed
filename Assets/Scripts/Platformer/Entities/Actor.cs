@@ -40,7 +40,7 @@ namespace App.Platformer
 
         public virtual bool IsRiding(Solid solid)
         {
-            return CollideCheck(solid, transform.position.x, transform.position.y - 1);
+            return CollideCheck(solid, 0, - 1);
         }
 
         public void Move(Vector2 amount, Action<Solid> onCollideH = null, Action<Solid> onCollideV = null)
