@@ -50,6 +50,7 @@ namespace App.Platformer
                         }
                         return true;
                     }
+                    tempPos = transform.position;
                     tempPos.x += dir;
                     transform.position = tempPos;
                     dx -= dir;
@@ -81,6 +82,7 @@ namespace App.Platformer
                         }
                         return true;
                     }
+                    tempPos = transform.position;
                     tempPos.y += 1f;
                     transform.position = tempPos;
                     dy -= 1;
@@ -115,9 +117,10 @@ namespace App.Platformer
                         return true;
                     }
                     */
+                    tempPos = transform.position;
                     tempPos.y -= 1;
                     transform.position = tempPos;
-                    dy -= 1;
+                    dy += 1;
                 }
             }
             return false;
