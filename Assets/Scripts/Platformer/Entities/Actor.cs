@@ -10,6 +10,18 @@ namespace App.Platformer
         private Vector2 tempPos = Vector2.zero;
         protected Collider2D coll;
 
+        public bool FinishPushOnSquish;
+        public bool NaivePush;
+        public bool Pushable = true;
+
+        public virtual bool FinishPushOnSquishRiding
+        {
+            get
+            {
+                return false;
+            }
+        }
+
         protected override void Start()
         {
             base.Start();
@@ -126,6 +138,135 @@ namespace App.Platformer
             return false;
         }
 
+        public virtual void MoveExactH(int move, Action<Solid> onCollide = null)
+        {
+            int dir = Math.Sign(move);
+            while (move != 0)
+            {
+                Collider2D c = PixelCollisions.CollideCheck(transform.position.x + dir, transform.position.y, coll.bounds.size.x, coll.bounds.size.y, CollisionLayersMask);
+                if (c != null)
+                {
+                    Entity entity = c.GetComponent<Entity>();
+                    if (onCollide != null)
+                    {
+                        onCollide(entity as Solid);
+                    }
+                    if (FinishPushOnSquish)
+                    {
+                        tempPos = transform.position;
+                        tempPos.x += move;
+                        transform.position = tempPos;
+                    }
+                    break;
+                }
+                tempPos = transform.position;
+                tempPos.x += dir;
+                transform.position = tempPos;
+                move -= dir;
+            }
+        }
+
+        public virtual void MoveExactV(int move, Action<Solid> onCollide = null)
+        {
+            Entity entity;
+            // Moving upwards
+            if (move > 0)
+            {
+                while (move != 0)
+                {
+                    Collider2D c = PixelCollisions.CollideCheck(transform.position.x, transform.position.y + 1, coll.bounds.size.x, coll.bounds.size.y, CollisionLayersMask);
+                    if (c != null)
+                    {
+                        entity = c.GetComponent<Entity>();
+                        if (onCollide != null)
+                        {
+                            onCollide(entity as Solid);
+                        }
+                        if (this.FinishPushOnSquish)
+                        {
+                            tempPos = transform.position;
+                            tempPos.y += move;
+                            transform.position = tempPos;
+                        }
+                        break;
+                    }
+                    tempPos = transform.position;
+                    tempPos.y += 1;
+                    transform.position = tempPos;
+                    move -= 1;
+                }
+            }
+            // Moving downwards
+            else if (move < 0)
+            {
+                while (move != 0)
+                {
+                    Collider2D c = PixelCollisions.CollideCheck(transform.position.x, transform.position.y - 1, coll.bounds.size.x, coll.bounds.size.y, CollisionLayersMask);
+                    if (c != null)
+                    {
+                        entity = c.GetComponent<Entity>();
+                        if (onCollide != null)
+                        {
+                            onCollide(entity as Solid);
+                        }
+                        if (this.FinishPushOnSquish)
+                        {
+                            tempPos = transform.position;
+                            tempPos.y += move;
+                            transform.position = tempPos;
+                        }
+                        break;
+                    }
+                    /*
+                    if (!this.IgnoreJumpThrus && ((entity = base.CollideFirstOutside(GameTags.JumpThru, base.X, base.Y + 1f)) != null))
+                    {
+                        if (onCollide != null)
+                        {
+                            onCollide(entity as Solid);
+                        }
+                        if (this.FinishPushOnSquish)
+                        {
+                            base.Y += move;
+                        }
+                        break;
+                    }
+                    */
+                    tempPos = transform.position;
+                    tempPos.y -= 1;
+                    transform.position = tempPos;
+                    move += 1;
+                }
+            }
+        }
+        
+
+        public virtual void DisableSolids()
+        {
+        }
+
+        public virtual void EnableSolids()
+        {
+        }
+
+        public virtual void OnSquishDown(Solid solid)
+        {
+            Destroy(this);
+        }
+
+        public virtual void OnSquishLeft(Solid solid)
+        {
+            Destroy(this);
+        }
+
+        public virtual void OnSquishRight(Solid solid)
+        {
+            Destroy(this);
+        }
+
+        public virtual void OnSquishUp(Solid solid)
+        {
+            Destroy(this);
+        }
 
 
     }
