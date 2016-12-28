@@ -237,11 +237,11 @@ namespace App.Platformer
             tempPos.y += direction.y * 8;
             transform.position = tempPos;
             */
-            /*
+            
             if (!Dead)
             {
                 var coll = Solid.Mover.GetComponent<Collider2D>();
-                coll.enabled = true;
+                //coll.enabled = true;
                 for (int i = 0; i <= 2; i++)
                 {
                     for (int j = 0; j <= 2; j++)
@@ -254,7 +254,7 @@ namespace App.Platformer
                                 {
                                     int dx = (i * 3) * k;
                                     int dy = (j * 3) * m;
-                                    Debug.Log(dx);
+                                    //Debug.Log("dx: " + dx + " dy: " + dy);
                                     var c = GetComponent<Collider2D>();
                                     if (!PixelCollisions.CollideCheck(transform.position.x + dx, transform.position.y + dy, c.bounds.size.x, c.bounds.size.y, CollisionLayersMask, coll))
                                     {
@@ -270,7 +270,7 @@ namespace App.Platformer
                                         {
                                             MoveExactV(-dy, null);
                                         }
-                                        coll.enabled = false;
+                                        //coll.enabled = false;
                                         return;
                                     }
                                 }
@@ -279,9 +279,9 @@ namespace App.Platformer
                     }
                 }
                 Die();
-                coll.enabled = false;
+                //coll.enabled = false;
             }
-            */
+            
         }
 
         public void Die()

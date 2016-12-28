@@ -58,7 +58,7 @@ namespace App.Platformer
                         var c = en.AddComponent<BoxCollider2D>();
                         c.size = new Vector2(8*2, 8);
                         en.AddComponent<SolidComponent>();
-                        en.transform.localPosition = new Vector2(x * 8, (map.Level.Height - 1 - y) * 8);
+                        en.transform.localPosition = new Vector2(x * 8 - 4, (map.Level.Height - 1 - y) * 8);
                         en.End = new Vector2(en.transform.position.x + 8*3, en.transform.position.y);
                     }
                     else if (map.Level.Tiles[x + y * map.Level.Width] == 4) {
@@ -71,7 +71,7 @@ namespace App.Platformer
                         var c = en.AddComponent<BoxCollider2D>();
                         c.size = new Vector2(8*2, 8);
                         en.AddComponent<SolidComponent>();
-                        en.transform.localPosition = new Vector2(x * 8, (map.Level.Height - 1 - y) * 8);
+                        en.transform.localPosition = new Vector2(x * 8 - 4, (map.Level.Height - 1 - y) * 8);
                         en.End = new Vector2(en.transform.position.x, en.transform.position.y + 8*3);
                     }
                 }
