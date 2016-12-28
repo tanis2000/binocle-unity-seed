@@ -162,6 +162,7 @@ namespace App.Platformer
                     }
                     if (FinishPushOnSquish)
                     {
+                        //Debug.Log("FinishPushOnSquish");
                         tempPos = transform.position;
                         tempPos.x += move;
                         transform.position = tempPos;

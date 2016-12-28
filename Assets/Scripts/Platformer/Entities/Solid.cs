@@ -51,7 +51,7 @@ namespace App.Platformer
                 {
                     if (actor.IsRiding(this))
                     {
-                        Debug.Log("riding");
+                        //Debug.Log("riding");
                         riding.Add(actor);
                         if (actor.FinishPushOnSquishRiding == this)
                         {
@@ -84,11 +84,13 @@ namespace App.Platformer
                                 {
                                     var right = transform.position.x + coll.bounds.extents.x;
                                     var left = actor.transform.position.x - ac.bounds.extents.x;
+                                    //Debug.Log("sp: " + transform.position.x + "ap: " + actor.transform.position.x + " sext: " + coll.bounds.extents.x + " aext: " + ac.bounds.extents.x + " Right: " + right + " Left: " + left);
                                     actor.MoveExactH((int) (right - left), new Action<Solid>(actor.OnSquishRight));
                                 }
                             }
                             else if (riding.Contains(actor))
                             {
+                                //Debug.Log(dx);
                                 actor.MoveExactH(dx, null);
                             }
                             actor.DisableSolids();
@@ -130,7 +132,8 @@ namespace App.Platformer
                     tempPos = transform.position;
                     tempPos.y += dy;
                     transform.position = tempPos;
-                    if (dy > 0)
+                    // Moving downwards
+                    if (dy < 0)
                     {
                         foreach (Actor actor in FindObjectsOfType(typeof(Actor)))
                         {
@@ -158,6 +161,7 @@ namespace App.Platformer
                             actor.DisableSolids();
                         }
                     }
+                    // Moving upwards
                     else
                     {
                         foreach (Actor actor in FindObjectsOfType(typeof(Actor)))
