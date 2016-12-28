@@ -9,19 +9,18 @@ namespace App.Platformer
         public static Game Game;
         public static Entity CreatePlayer(Entity parent, Vector2 startingPosition)
         {
-            var e = Game.Scene.CreateEntity("player");
+            var e = Game.Scene.CreateEntity<Hero>("player");
             e.SetParent(parent);
             e.gameObject.layer = LayerMask.NameToLayer("Heroes");
             e.AddComponent<InputComponent>();
-            var move = e.AddComponent<MovementComponent>();
-            move.MaxVelocity = new Vector2(80, 80);
-            move.CollisionLayersMask = 1 << LayerMask.NameToLayer("Blocks");
-            var sr = e.AddComponent<SpriteRenderer>();
+            e.CollisionLayersMask = 1 << LayerMask.NameToLayer("Blocks");
+            var ce = Game.Scene.CreateEntity("sprite");
+            ce.SetParent(e);
+            var sr = ce.AddComponent<SpriteRenderer>();
             sr.sprite = Utils.CreateBoxSprite(8, 8, new Color(1, 1, 1, 1));
             var c = e.AddComponent<BoxCollider2D>();
             c.size = new Vector2(8, 8);
-            e.AddComponent<PlayerControlComponent>();
-            e.AddComponent<ScaleComponent>();
+            ce.AddComponent<ScaleComponent>();
             e.transform.localPosition = startingPosition;
             return e;
         }
@@ -36,7 +35,7 @@ namespace App.Platformer
                 {
                     if (map.Level.Tiles[x + y * map.Level.Width] == 1)
                     {
-                        var en = Game.Scene.CreateEntity(string.Format("tile-{0}-{1}", x, y));
+                        var en = Game.Scene.CreateEntity<Solid>(string.Format("tile-{0}-{1}", x, y));
                         en.SetParent(e);
                         en.gameObject.layer = LayerMask.NameToLayer("Blocks");
                         var sr = en.AddComponent<SpriteRenderer>();
@@ -50,15 +49,30 @@ namespace App.Platformer
                         map.PlayerSpawnPosition = new Vector2(x * 8, (map.Level.Height - 1 - y) * 8);
                     }
                     else if (map.Level.Tiles[x + y * map.Level.Width] == 3) {
-                        var en = Game.Scene.CreateEntity(string.Format("moving-{0}-{1}", x, y));
+                        var en = Game.Scene.CreateEntity<MovingPlatform>(string.Format("moving-{0}-{1}", x, y));
                         en.SetParent(e);
                         en.gameObject.layer = LayerMask.NameToLayer("Blocks");
+                        en.CollisionLayersMask = 1 << LayerMask.NameToLayer("Heroes");
                         var sr = en.AddComponent<SpriteRenderer>();
-                        sr.sprite = Utils.CreateBoxSprite(8, 8, new Color(0, 1, 1, 1));
+                        sr.sprite = Utils.CreateBoxSprite(8*2, 8, new Color(0, 1, 1, 1));
                         var c = en.AddComponent<BoxCollider2D>();
-                        c.size = new Vector2(8, 8);
+                        c.size = new Vector2(8*2, 8);
                         en.AddComponent<SolidComponent>();
-                        en.transform.localPosition = new Vector2(x * 8, (map.Level.Height - 1 - y) * 8);
+                        en.transform.localPosition = new Vector2(x * 8 - 4, (map.Level.Height - 1 - y) * 8);
+                        en.End = new Vector2(en.transform.position.x + 8*3, en.transform.position.y);
+                    }
+                    else if (map.Level.Tiles[x + y * map.Level.Width] == 4) {
+                        var en = Game.Scene.CreateEntity<MovingPlatform>(string.Format("moving-{0}-{1}", x, y));
+                        en.SetParent(e);
+                        en.gameObject.layer = LayerMask.NameToLayer("Blocks");
+                        en.CollisionLayersMask = 1 << LayerMask.NameToLayer("Heroes");
+                        var sr = en.AddComponent<SpriteRenderer>();
+                        sr.sprite = Utils.CreateBoxSprite(8*2, 8, new Color(0, 1, 1, 1));
+                        var c = en.AddComponent<BoxCollider2D>();
+                        c.size = new Vector2(8*2, 8);
+                        en.AddComponent<SolidComponent>();
+                        en.transform.localPosition = new Vector2(x * 8 - 4, (map.Level.Height - 1 - y) * 8);
+                        en.End = new Vector2(en.transform.position.x, en.transform.position.y + 8*3);
                     }
                 }
             }

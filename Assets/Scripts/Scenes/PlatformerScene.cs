@@ -48,7 +48,8 @@ namespace App
         {
             VersionText = GameObject.Find("VersionText").GetComponent<Text>();
             VersionText.text = ((App.Game)Game).Version;
-
+            Application.targetFrameRate = 60; // we try to chieve 60 FPS
+            
             /*
                   gameOverText = GameObject.Find("gameover-label").GetComponent<Text>();
                   scoreText = GameObject.Find("score-label").GetComponent<Text>();
@@ -73,13 +74,13 @@ namespace App
             // Input/logic
             AddEntityProcessor(new Platformer.InputProcessor(new Matcher().All(typeof(Platformer.InputComponent))));
             //AddEntityProcessor(new AIProcessor(new Matcher().All(typeof(AIComponent))));
-            AddEntityProcessor(new Platformer.PlayerControlProcessor(new Matcher().All(typeof(Platformer.PlayerControlComponent))));
+            //AddEntityProcessor(new Platformer.PlayerControlProcessor(new Matcher().All(typeof(Platformer.PlayerControlComponent))));
 
             // Physics
             //AddEntityProcessor(new ScaleProcessor(new Matcher().All(typeof(ScaleComponent))));
             //AddEntityProcessor(new PositionProcessor(new Matcher().All(typeof(PositionComponent))));
             //AddEntityProcessor (new PhysicsProcessor ());
-            AddEntityProcessor(new Platformer.MovementProcessor(new Matcher ().All (typeof(Platformer.MovementComponent))));
+            //AddEntityProcessor(new Platformer.MovementProcessor(new Matcher ().All (typeof(Platformer.MovementComponent))));
                         /*
                         AddEntityProcessor(new BouncingProcessor(new Matcher ().All (typeof(BouncingComponent))));			
 
