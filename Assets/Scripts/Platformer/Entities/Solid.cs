@@ -197,6 +197,19 @@ namespace App.Platformer
             Mover = null;
         }
         
+        public void MoveTo(Vector2 target)
+        {
+            Move(target - new Vector2(transform.position.x + SubPixelCounter.x, transform.position.y + SubPixelCounter.y));
+        }
+
+        public void MoveTowards(Vector2 target, float maxAmount)
+        {
+            var v = new Vector2(transform.position.x + SubPixelCounter.x, transform.position.y + SubPixelCounter.y);
+            MoveTo(Utils.Approach(v, target, maxAmount));
+        }
+
+
+
 
     }
 }

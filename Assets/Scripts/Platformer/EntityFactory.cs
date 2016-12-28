@@ -35,7 +35,7 @@ namespace App.Platformer
                 {
                     if (map.Level.Tiles[x + y * map.Level.Width] == 1)
                     {
-                        var en = Game.Scene.CreateEntity(string.Format("tile-{0}-{1}", x, y));
+                        var en = Game.Scene.CreateEntity<Solid>(string.Format("tile-{0}-{1}", x, y));
                         en.SetParent(e);
                         en.gameObject.layer = LayerMask.NameToLayer("Blocks");
                         var sr = en.AddComponent<SpriteRenderer>();
@@ -49,7 +49,7 @@ namespace App.Platformer
                         map.PlayerSpawnPosition = new Vector2(x * 8, (map.Level.Height - 1 - y) * 8);
                     }
                     else if (map.Level.Tiles[x + y * map.Level.Width] == 3) {
-                        var en = Game.Scene.CreateEntity<Solid>(string.Format("moving-{0}-{1}", x, y));
+                        var en = Game.Scene.CreateEntity<MovingPlatform>(string.Format("moving-{0}-{1}", x, y));
                         en.SetParent(e);
                         en.gameObject.layer = LayerMask.NameToLayer("Blocks");
                         var sr = en.AddComponent<SpriteRenderer>();
@@ -58,6 +58,7 @@ namespace App.Platformer
                         c.size = new Vector2(8, 8);
                         en.AddComponent<SolidComponent>();
                         en.transform.localPosition = new Vector2(x * 8, (map.Level.Height - 1 - y) * 8);
+                        en.End = new Vector2(en.transform.position.x + 8*3, en.transform.position.y);
                     }
                 }
             }

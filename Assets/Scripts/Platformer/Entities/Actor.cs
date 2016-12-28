@@ -22,6 +22,15 @@ namespace App.Platformer
             }
         }
 
+        public Vector2 ActualPosition
+        {
+            get
+            {
+                return new Vector2(transform.position.x + SubPixelCounter.x, transform.position.y + SubPixelCounter.y);
+            }
+        }
+        
+
         protected override void Start()
         {
             base.Start();
@@ -53,7 +62,7 @@ namespace App.Platformer
                     Collider2D c = PixelCollisions.CollideCheck(transform.position.x + dir, transform.position.y, coll.bounds.size.x, coll.bounds.size.y, CollisionLayersMask);
                     if (c != null)
                     {
-                        Debug.Log("Collision with " + c.name + " " + dir);
+                        //Debug.Log("Collision with " + c.name + " " + dir);
                         Entity entity = c.GetComponent<Entity>();
                         SubPixelCounter.x = 0f;
                         if (onCollide != null)
@@ -85,7 +94,7 @@ namespace App.Platformer
                     Collider2D c = PixelCollisions.CollideCheck(transform.position.x, transform.position.y + 1, coll.bounds.size.x, coll.bounds.size.y, CollisionLayersMask);
                     if (c != null)
                     {
-                        Debug.Log("Collision with " + c.name);
+                        //Debug.Log("Collision with " + c.name);
                         entity = c.GetComponent<Entity>();
                         SubPixelCounter.y = 0f;
                         if (onCollide != null)
@@ -109,7 +118,7 @@ namespace App.Platformer
                     Collider2D c = PixelCollisions.CollideCheck(transform.position.x, transform.position.y - 1, coll.bounds.size.x, coll.bounds.size.y, CollisionLayersMask);
                     if (c != null)
                     {
-                        Debug.Log("Collision with " + c.name);
+                        //Debug.Log("Collision with " + c.name);
                         entity = c.GetComponent<Entity>();
                         SubPixelCounter.y = 0f;
                         if (onCollide != null)
@@ -239,6 +248,12 @@ namespace App.Platformer
             }
         }
         
+        public void MoveTowards(Vector2 target, float maxAmount, Action<Solid> onCollideH = null, Action<Solid> onCollideV = null)
+        {
+            Vector2 vector = Utils.Approach(ActualPosition, target, maxAmount);
+            Move(vector - ActualPosition, null, null);
+        }
+
 
         public virtual void DisableSolids()
         {
