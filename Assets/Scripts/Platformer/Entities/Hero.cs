@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using Binocle;
 using UnityEngine;
 
@@ -38,6 +40,7 @@ namespace App.Platformer
         public bool Invisible;
 
         public bool Dead { get; private set; }
+        public Vector2 SpawnPosition = Vector2.zero;
 
         protected override void Start()
         {
@@ -58,6 +61,14 @@ namespace App.Platformer
 			bool kFire = false;
             // Temporary vars
 			float tempAccel, tempFric;
+
+            if (Dead) {
+                kLeft = false;
+                kRight = false;
+                kDown = false;
+                kJump = false;
+                kFire = false;
+            }
 
 			if (BottomCollided && !OnGroundPrev) {
 				// Squash + stretch
@@ -289,6 +300,7 @@ namespace App.Platformer
         {
             Dead = true;
             Debug.Log("DEAD!");
+            StartCoroutine(Respawn(3));
         }
 
         public bool Detectable(Vector2 from)
@@ -299,5 +311,22 @@ namespace App.Platformer
             return true;
         }
 
+        public void Hurt(Bullet bullet) {
+            Die();
+        }
+
+        public override bool OnBulletHit(Bullet bullet)
+        {
+            Hurt(bullet);
+            Destroy(bullet);
+            return true;
+        }
+
+        public IEnumerator Respawn(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            transform.localPosition = SpawnPosition;
+            Dead = false;
+        }
     }
 }

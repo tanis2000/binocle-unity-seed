@@ -214,6 +214,11 @@ namespace App.Platformer
             MoveTo(Utils.Approach(v, target, maxAmount));
         }
 
+        public override bool OnBulletHit(Bullet bullet)
+        {
+            Destroy(bullet);
+            return true;
+        }
 
 
 

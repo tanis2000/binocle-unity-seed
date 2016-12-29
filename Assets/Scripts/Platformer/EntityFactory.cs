@@ -13,6 +13,7 @@ namespace App.Platformer
             var e = Game.Scene.CreateEntity<Hero>("player");
             e.SetParent(parent);
             e.gameObject.layer = LayerMask.NameToLayer("Heroes");
+            e.SpawnPosition = startingPosition;
             e.AddComponent<InputComponent>();
             e.CollisionLayersMask = 1 << LayerMask.NameToLayer("Blocks");
             var ce = Game.Scene.CreateEntity("sprite");
@@ -191,6 +192,23 @@ namespace App.Platformer
             c.size = new Vector2(8, 8);
             ce.AddComponent<ScaleComponent>();
             e.transform.localPosition = startingPosition;
+            return e;
+        }
+
+        public static Entity CreateBullet(Vector2 startingPosition, Vector2 velocity)
+        {
+            var e = Game.Scene.CreateEntity<Bullet>("bullet");
+            e.gameObject.layer = LayerMask.NameToLayer("Bullets");
+            e.CollisionLayersMask = 1 << LayerMask.NameToLayer("Heroes") | 1 << LayerMask.NameToLayer("Blocks");
+            e.Velocity = velocity;
+            var ce = Game.Scene.CreateEntity("sprite");
+            ce.SetParent(e);
+            var sr = ce.AddComponent<SpriteRenderer>();
+            sr.sprite = Utils.CreateBoxSprite(4, 4, new Color(0, 0.8f, 0.8f, 1));
+            var c = e.AddComponent<BoxCollider2D>();
+            c.size = new Vector2(4, 4);
+            ce.AddComponent<ScaleComponent>();
+            e.transform.position = startingPosition;
             return e;
         }
 

@@ -109,5 +109,11 @@ namespace App.Platformer
         protected virtual void OnHeroCollide(Hero hero)
         {
         }
+
+        public virtual bool OnBulletHit(Bullet bullet)
+        {
+            return false;
+        }
+
     }
 }
