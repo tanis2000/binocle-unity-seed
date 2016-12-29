@@ -93,6 +93,27 @@ namespace App.Platformer
             return tm;
         }
 
+        public static Map.Map CreateMapFromTiledMap(Binocle.Importers.Tiled.TmxMap map, Entity parent) 
+        {
+            var m = new Map.Map();
+            foreach(var layer in map.ObjectGroups) {
+                if (layer.Name == "players") {
+                    foreach(var obj in layer.Objects) {
+                        if (obj.Name == "player1") {
+                            m.PlayerSpawnPosition = new Vector2((float)obj.X, (map.Height - 1) * map.TileHeight - (float)obj.Y);
+                            //Debug.Log(m.PlayerSpawnPosition);
+                        }
+                    }
+                } else if (layer.Name == "turrets") {
+                    foreach(var obj in layer.Objects) {
+                        var pos = new Vector2((float)obj.X, (map.Height - 1) * map.TileHeight - (float)obj.Y);
+                        CreateTurret(parent, pos);
+                    }
+                }
+            }
+            return m;
+        }
+
         public static Entity CreateMapFromTiledMap(TileMap map, ref Vector2 PlayerSpawnPosition)
         {
             var e = Game.Scene.CreateEntity("map");
@@ -155,6 +176,24 @@ namespace App.Platformer
             var cameraFollow = Camera.main.gameObject.AddComponent<CameraFollow>();
             cameraFollow.target = target;
         }
+
+        public static Entity CreateTurret(Entity parent, Vector2 startingPosition)
+        {
+            var e = Game.Scene.CreateEntity<Turret>("turret");
+            e.SetParent(parent);
+            e.gameObject.layer = LayerMask.NameToLayer("Enemies");
+            e.CollisionLayersMask = 1 << LayerMask.NameToLayer("Blocks");
+            var ce = Game.Scene.CreateEntity("sprite");
+            ce.SetParent(e);
+            var sr = ce.AddComponent<SpriteRenderer>();
+            sr.sprite = Utils.CreateBoxSprite(8, 8, new Color(0.8f, 0.8f, 0, 1));
+            var c = e.AddComponent<BoxCollider2D>();
+            c.size = new Vector2(8, 8);
+            ce.AddComponent<ScaleComponent>();
+            e.transform.localPosition = startingPosition;
+            return e;
+        }
+
 
         public static Map.Level LoadLevel(int number)
         {

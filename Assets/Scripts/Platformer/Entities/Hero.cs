@@ -35,6 +35,7 @@ namespace App.Platformer
         public bool OnLadderPrev;
 
         public Vector2 Velocity = Vector2.zero;
+        public bool Invisible;
 
         public bool Dead { get; private set; }
 
@@ -288,6 +289,14 @@ namespace App.Platformer
         {
             Dead = true;
             Debug.Log("DEAD!");
+        }
+
+        public bool Detectable(Vector2 from)
+        {
+            if (Flashing) return false;
+            if (Dead) return false;
+            if (Invisible) return false;
+            return true;
         }
 
     }

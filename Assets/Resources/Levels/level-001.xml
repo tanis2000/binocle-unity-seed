@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="40" height="30" tilewidth="16" tileheight="16" nextobjectid="5">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="40" height="30" tilewidth="16" tileheight="16" nextobjectid="6">
  <tileset firstgid="1" name="tiles" tilewidth="16" tileheight="16" tilecount="3">
   <image source="../Sprites/tiles.png" width="48" height="16"/>
  </tileset>
@@ -30,7 +30,7 @@
    eJztzgEJAAAMA6DB+3d+jDHQBCYAAEDDtQMAMOIBKFwABA==
   </data>
  </layer>
- <objectgroup name="entities">
+ <objectgroup name="players">
   <object id="1" name="player1" type="player_start" x="32" y="48" width="16" height="16">
    <ellipse/>
   </object>
@@ -41,6 +41,11 @@
    <ellipse/>
   </object>
   <object id="4" name="player4" type="player_start" x="592" y="448" width="16" height="16">
+   <ellipse/>
+  </object>
+ </objectgroup>
+ <objectgroup color="#d0642f" name="turrets">
+  <object id="5" name="turret" x="144" y="160" width="16" height="16">
    <ellipse/>
   </object>
  </objectgroup>

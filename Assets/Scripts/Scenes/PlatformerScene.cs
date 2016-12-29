@@ -42,7 +42,8 @@ namespace App
                 var tm = Platformer.EntityFactory.CreateTileMapFromTiledMap(tiledMap, TilesTexture);
                 Debug.Log(tm.tileSet.GetSprite(0));
                 MapEntity = Platformer.EntityFactory.CreateMapFromTiledMap(tm, ref PlayerSpawnPosition);
-                Hero = Platformer.EntityFactory.CreatePlayer(MapEntity, PlayerSpawnPosition);
+                Map = Platformer.EntityFactory.CreateMapFromTiledMap(tiledMap, MapEntity);
+                Hero = Platformer.EntityFactory.CreatePlayer(MapEntity, Map.PlayerSpawnPosition);
                 //var level = Platformer.EntityFactory.LoadLevel(1);
                 //Map = new Map();
                 //Map.Level = level;
