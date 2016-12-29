@@ -1,5 +1,6 @@
 using App.Platformer.Map;
 using Binocle;
+using Binocle.Importers.Tiled;
 using Binocle.Processors;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,6 +18,9 @@ namespace App
         public Text VersionText;
         public Map Map;
         public Entity Hero;
+        public Texture2D TilesTexture;
+        public Vector2 PlayerSpawnPosition = Vector2.zero;
+
 
         public override void Awake()
         {
@@ -31,11 +35,19 @@ namespace App
             if (!SetupDone)
             {
                 // Everything that needs at least the processors to be set up should go in there
-                var level = Platformer.EntityFactory.LoadLevel(1);
-                Map = new Map();
-                Map.Level = level;
-                MapEntity = Platformer.EntityFactory.CreateMap(Map);
-                Hero = Platformer.EntityFactory.CreatePlayer(MapEntity, Map.PlayerSpawnPosition);
+                var mapFile = Resources.Load<TextAsset>("Levels/level-001");
+                Debug.Log(mapFile);
+                var tiledMap = new TmxMap(mapFile.text);
+                Debug.Log(tiledMap);
+                var tm = Platformer.EntityFactory.CreateTileMapFromTiledMap(tiledMap, TilesTexture);
+                Debug.Log(tm.tileSet.GetSprite(0));
+                MapEntity = Platformer.EntityFactory.CreateMapFromTiledMap(tm, ref PlayerSpawnPosition);
+                Hero = Platformer.EntityFactory.CreatePlayer(MapEntity, PlayerSpawnPosition);
+                //var level = Platformer.EntityFactory.LoadLevel(1);
+                //Map = new Map();
+                //Map.Level = level;
+                //MapEntity = Platformer.EntityFactory.CreateMapFromJson(Map);
+                //Hero = Platformer.EntityFactory.CreatePlayer(MapEntity, Map.PlayerSpawnPosition);
                 Platformer.EntityFactory.CreateCamera(Hero.gameObject.transform);
                 // Hack to force initilization on assignment
                 //GetEntityProcessor<MapProcessor>().Map = Map.GetComponent<MapComponent>();
@@ -50,6 +62,8 @@ namespace App
             VersionText.text = ((App.Game)Game).Version;
             Application.targetFrameRate = 60; // we try to chieve 60 FPS
             
+            TilesTexture = Resources.Load ("Sprites/tiles", typeof(Texture2D)) as Texture2D;
+
             /*
                   gameOverText = GameObject.Find("gameover-label").GetComponent<Text>();
                   scoreText = GameObject.Find("score-label").GetComponent<Text>();

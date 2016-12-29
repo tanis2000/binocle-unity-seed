@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="40" height="30" tilewidth="16" tileheight="16" nextobjectid="5">
+ <tileset firstgid="1" name="tiles" tilewidth="16" tileheight="16" tilecount="3">
+  <image source="../Sprites/tiles.png" width="48" height="16"/>
+ </tileset>
+ <layer name="bg" width="40" height="30">
+  <properties>
+   <property name="nocollide" value="true"/>
+   <property name="tileset" value="tiles"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJztw8EJAAAMA6Ej+w/dNfpQcNVUVVVV9ekDDqgJYQ==
+  </data>
+ </layer>
+ <layer name="walls" width="40" height="30">
+  <properties>
+   <property name="tileset" value="tiles"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJztlFEOwCAIQ028/513gcUV2irqmvgn5QlIb6314qeqfj5OSK9VM4H63Dp/jjePvGbU9yvHSf3N7E9257pzqWIQvd1Fc0VilHdX8iF9YfiQHrL/N8On9GfjVf7ZXezgG/35HfgirCo+Zc0cfK54t7L1Z/MxfV8txyzO8FLsGYfHDf1VKsqkekfGZxe+yucBR/QELQ==
+  </data>
+ </layer>
+ <layer name="movingh" width="40" height="30">
+  <data encoding="base64" compression="zlib">
+   eJztx7ENAAAIA6Am/v+zH9TJDTYS6OY4AAAAwKcFdjgABw==
+  </data>
+ </layer>
+ <layer name="movingv" width="40" height="30">
+  <data encoding="base64" compression="zlib">
+   eJztzgEJAAAMA6DB+3d+jDHQBCYAAEDDtQMAMOIBKFwABA==
+  </data>
+ </layer>
+ <objectgroup name="entities">
+  <object id="1" name="player1" type="player_start" x="32" y="48" width="16" height="16">
+   <ellipse/>
+  </object>
+  <object id="2" name="player2" type="player_start" x="592" y="48" width="16" height="16">
+   <ellipse/>
+  </object>
+  <object id="3" name="player3" type="player_start" x="32" y="448" width="16" height="16">
+   <ellipse/>
+  </object>
+  <object id="4" name="player4" type="player_start" x="592" y="448" width="16" height="16">
+   <ellipse/>
+  </object>
+ </objectgroup>
+</map>
