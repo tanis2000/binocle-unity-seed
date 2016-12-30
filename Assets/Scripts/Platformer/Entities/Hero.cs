@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Binocle;
+using Binocle.Sprites;
 using UnityEngine;
 
 namespace App.Platformer
@@ -10,6 +11,8 @@ namespace App.Platformer
         // Movement
         private InputComponent input;
         private ScaleComponent scale;
+        private SpriteRenderer spriteRenderer;
+        private SpriteAnimator spriteAnimator;
 
 		private float groundAccel = 1.00f;
 		private float groundFric  = 3.00f;
@@ -41,12 +44,15 @@ namespace App.Platformer
 
         public bool Dead { get; private set; }
         public Vector2 SpawnPosition = Vector2.zero;
+        public int Facing = 1;
 
         protected override void Start()
         {
             base.Start();
             input = GetComponent<InputComponent>();
             scale = GetComponentInChildren<ScaleComponent>();
+            spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+            spriteAnimator = GetComponentInChildren<SpriteAnimator>();
         }
         
         protected override void Update()
@@ -117,9 +123,11 @@ namespace App.Platformer
 			// Left
 			if (kLeft && !kRight && !sticking)
 			{
+				Facing = -1;
 				Velocity.x = Utils.Approach(Velocity.x, -vxMax, tempAccel);
             // Right
 			} else if (kRight && !kLeft && !sticking) {
+				Facing = 1;
 				Velocity.x = Utils.Approach(Velocity.x, vxMax, tempAccel);
 			}
 
@@ -199,6 +207,14 @@ namespace App.Platformer
 					Velocity.y *= 0.25f;
 			}
 
+			// Jump state check
+			if (!BottomCollided) {
+				if (LeftCollided)
+					Facing = 1;
+				if (RightCollided)
+					Facing = -1;
+			}
+
             scale.Scale.x = Utils.Approach(scale.Scale.x, 1.0f, 0.05f);
 			scale.Scale.y = Utils.Approach(scale.Scale.y, 1.0f, 0.05f);
 
@@ -206,6 +222,15 @@ namespace App.Platformer
             MoveV(Velocity.y * (Time.deltaTime / 0.01666667f));
 
             scale.transform.localScale = scale.Scale;
+
+			if (spriteRenderer != null) {
+				Vector2 s = new Vector2 (spriteRenderer.transform.localScale.x, spriteRenderer.transform.localScale.y);
+				s.x *= Facing;
+				spriteRenderer.transform.localScale = s;
+				if (spriteAnimator != null) {
+					spriteAnimator.FlipTo(Facing);
+				}
+			}
 
             OnGroundPrev = BottomCollided;
 			OnTopPrev = TopCollided;
@@ -301,6 +326,7 @@ namespace App.Platformer
         {
             Dead = true;
             Debug.Log("DEAD!");
+            spriteAnimator.Play("die", false);
             StartCoroutine(Respawn(3));
         }
 
@@ -328,6 +354,8 @@ namespace App.Platformer
             yield return new WaitForSeconds(delay);
             transform.localPosition = SpawnPosition;
             Dead = false;
+            Flash(3);
+            spriteAnimator.Play("idle");
         }
     }
 }

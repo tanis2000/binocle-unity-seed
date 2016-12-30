@@ -2,6 +2,7 @@ using Binocle;
 using UnityEngine;
 using App;
 using Binocle.TileMaps;
+using Binocle.Sprites;
 
 namespace App.Platformer
 {
@@ -19,11 +20,34 @@ namespace App.Platformer
             var ce = Game.Scene.CreateEntity("sprite");
             ce.SetParent(e);
             var sr = ce.AddComponent<SpriteRenderer>();
-            sr.sprite = Utils.CreateBoxSprite(8, 8, new Color(1, 1, 1, 1));
+            //sr.sprite = Utils.CreateBoxSprite(8, 8, new Color(1, 1, 1, 1));
             var c = e.AddComponent<BoxCollider2D>();
-            c.size = new Vector2(8, 8);
+            c.size = new Vector2(10, 10);
             ce.AddComponent<ScaleComponent>();
             e.transform.localPosition = startingPosition;
+            var spriteAnimator = ce.AddComponent<SpriteAnimator>();
+            SpriteAnimation sa = new SpriteAnimation ();
+            sa.fps = 6;
+            var res = Resources.LoadAll<Sprite>("Sprites/hero-idle");
+            sa.AddFrame(res[0]);
+            sa.AddFrame(res[1]);
+            sa.name = "idle";
+            sa.id = 0;
+            sa.sequenceCode = "0-1:forever";
+            spriteAnimator.AddAnimation(sa);
+
+            sa = new SpriteAnimation ();
+            sa.fps = 6;
+            res = Resources.LoadAll<Sprite>("Sprites/hero-die");
+            sa.AddFrame(res[0]);
+            sa.AddFrame(res[1]);
+            sa.AddFrame(res[2]);
+            sa.name = "die";
+            sa.id = 1;
+            sa.sequenceCode = "0-2";
+            spriteAnimator.AddAnimation(sa);
+
+            spriteAnimator.Play("idle");
             return e;
         }
 
@@ -166,6 +190,15 @@ namespace App.Platformer
                             en.transform.localPosition = new Vector2(x * map.tileWidth - map.tileWidth/2, (map.height - 1 - y) * map.tileHeight);
                             en.End = new Vector2(en.transform.position.x, en.transform.position.y + map.tileHeight*3);
                         }
+                        else if (layer.name == "bg" && tile.TileId != 0) {
+                            var en = Game.Scene.CreateEntity<Entity>(string.Format("bg-{0}-{1}", x, y));
+                            en.SetParent(e);
+                            en.gameObject.layer = LayerMask.NameToLayer("Backgrounds");
+                            var sr = en.AddComponent<SpriteRenderer>();
+                            sr.sortingOrder = -1;
+                            sr.sprite = map.tileSet.GetSprite(tile.TileId-1);
+                            en.transform.localPosition = new Vector2(x * map.tileWidth, (map.height - 1 - y) * map.tileHeight);
+                        }
                     }
                 }
             }
@@ -187,11 +220,24 @@ namespace App.Platformer
             var ce = Game.Scene.CreateEntity("sprite");
             ce.SetParent(e);
             var sr = ce.AddComponent<SpriteRenderer>();
-            sr.sprite = Utils.CreateBoxSprite(8, 8, new Color(0.8f, 0.8f, 0, 1));
+            //sr.sprite = Utils.CreateBoxSprite(8, 8, new Color(0.8f, 0.8f, 0, 1));
             var c = e.AddComponent<BoxCollider2D>();
             c.size = new Vector2(8, 8);
             ce.AddComponent<ScaleComponent>();
             e.transform.localPosition = startingPosition;
+            var spriteAnimator = ce.AddComponent<SpriteAnimator>();
+            SpriteAnimation sa = new SpriteAnimation ();
+            sa.fps = 6;
+            var res = Resources.LoadAll<Sprite>("Sprites/turret");
+            sa.AddFrame(res[0]);
+            sa.AddFrame(res[1]);
+            sa.AddFrame(res[2]);
+            sa.AddFrame(res[3]);
+            sa.name = "idle";
+            sa.id = 0;
+            sa.sequenceCode = "0-3:forever";
+            spriteAnimator.AddAnimation(sa);
+            spriteAnimator.Play("idle");
             return e;
         }
 

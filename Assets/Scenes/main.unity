@@ -603,6 +603,7 @@ MonoBehaviour:
   GUIScaler: {fileID: 0}
   Scene: {fileID: 0}
   mainSceneSetup: 0
+  platformerSceneSetup: 0
   continueSelected: 0
   Version: 0.1.0
 --- !u!4 &1907904230

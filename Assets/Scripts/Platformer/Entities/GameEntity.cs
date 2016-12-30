@@ -11,6 +11,7 @@ namespace App.Platformer
         private Action onFlashFinish;
 
         public int CollisionLayersMask;
+        public SpriteRenderer SpriteRenderer;
 
         public PlatformerScene GameScene
         {
@@ -24,21 +25,12 @@ namespace App.Platformer
             private set;
         }
 
-        public SpriteRenderer SpriteRenderer
-        {
-            get;
-            private set;
-        }
-
         protected virtual void Start()
         {
             if (Scene is PlatformerScene) {
                 GameScene = Scene as PlatformerScene;
             }
-            var s = GetComponent<SpriteRenderer>();
-            if (s != null) {
-                SpriteRenderer = s;
-            }
+            SpriteRenderer = GetComponentInChildren<SpriteRenderer>();
         }
 
         protected virtual void Update()
@@ -51,7 +43,7 @@ namespace App.Platformer
             if (Flashing) {
                 flashInterval -= Time.deltaTime;
                 if (flashInterval <= 0) {
-                    flashInterval = 3;
+                    flashInterval = 0.05f;
                     OnFlash();
                 }
                 if (flashCounter > 0) {
@@ -78,7 +70,7 @@ namespace App.Platformer
         {
             if (!Flashing) {
                 Flashing = true;
-                flashInterval = 3;
+                flashInterval = 0.05f;
                 OnFlashBegin();
             }
             flashCounter = 0;

@@ -45,7 +45,7 @@
   </object>
  </objectgroup>
  <objectgroup color="#d0642f" name="turrets">
-  <object id="5" name="turret" x="144" y="160" width="16" height="16">
+  <object id="5" name="turret" x="148" y="160" width="16" height="16">
    <ellipse/>
   </object>
  </objectgroup>
