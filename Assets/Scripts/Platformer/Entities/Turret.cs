@@ -6,8 +6,9 @@ namespace App.Platformer
     {
         private float fireCooldown = 1.5f;
         private float fireRate = 1.5f;
-        void Update()
+        protected override void Update()
         {
+            base.Update();
             fireCooldown -= Time.deltaTime;
             // Check if player is in LOS
             var hero = GetClosestHeroWithSight(900);

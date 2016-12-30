@@ -41,7 +41,7 @@ namespace App.Platformer
             }
         }
 
-        void Update()
+        protected virtual void Update()
         {
             UpdateFlash();
         }

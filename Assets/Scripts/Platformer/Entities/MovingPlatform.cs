@@ -25,8 +25,9 @@ namespace App.Platformer
             start = transform.position;
         }
 
-        void Update()
+        protected override void Update()
         {
+            base.Update();
             MoveTowards(moveTarget, 0.4f * (Time.deltaTime / 0.01666667f));
             if (transform.position.x == moveTarget.x && transform.position.y == moveTarget.y) {
                 if (moveTarget == End) {

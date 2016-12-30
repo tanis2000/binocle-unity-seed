@@ -49,8 +49,9 @@ namespace App.Platformer
             scale = GetComponentInChildren<ScaleComponent>();
         }
         
-        void Update()
+        protected override void Update()
         {
+            base.Update();
             // Init the controls
 			bool kLeft = input.Left;
 			bool kRight = input.Right;

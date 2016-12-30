@@ -9,8 +9,9 @@ namespace App.Platformer
         public int Damage = 1;
         public Vector2 Velocity;
 
-        void Update()
+        protected override void Update()
         {
+            base.Update();
             CheckForTargetCollisions();
             MoveH(Velocity.x * (Time.deltaTime / 0.01666667f));
             MoveV(Velocity.y * (Time.deltaTime / 0.01666667f));
