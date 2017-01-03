@@ -167,9 +167,13 @@ namespace App.Platformer
                             en.SetParent(e);
                             en.gameObject.layer = LayerMask.NameToLayer("Blocks");
                             en.CollisionLayersMask = 1 << LayerMask.NameToLayer("Heroes");
-                            var sr = en.AddComponent<SpriteRenderer>();
-                            //sr.sprite = Utils.CreateBoxSprite(8*2, 8, new Color(0, 1, 1, 1));
-                            sr.sprite = map.tileSet.GetSprite(tile.TileId-1);
+                            for (int i = -1 ; i <= 1 ; i+=2) {
+                                var sen = Game.Scene.CreateEntity<Entity>("sprite");
+                                sen.SetParent(en);
+                                sen.transform.localPosition = new Vector2(map.tileWidth/2*i, 0);
+                                var sr = sen.AddComponent<SpriteRenderer>();
+                                sr.sprite = map.tileSet.GetSprite(tile.TileId-1);
+                            }
                             var c = en.AddComponent<BoxCollider2D>();
                             c.size = new Vector2(map.tileWidth*2, map.tileHeight);
                             en.AddComponent<SolidComponent>();
@@ -181,9 +185,13 @@ namespace App.Platformer
                             en.SetParent(e);
                             en.gameObject.layer = LayerMask.NameToLayer("Blocks");
                             en.CollisionLayersMask = 1 << LayerMask.NameToLayer("Heroes");
-                            var sr = en.AddComponent<SpriteRenderer>();
-                            //sr.sprite = Utils.CreateBoxSprite(8*2, 8, new Color(0, 1, 1, 1));
-                            sr.sprite = map.tileSet.GetSprite(tile.TileId-1);
+                            for (int i = -1 ; i <= 1 ; i+=2) {
+                                var sen = Game.Scene.CreateEntity<Entity>("sprite");
+                                sen.SetParent(en);
+                                sen.transform.localPosition = new Vector2(map.tileWidth/2*i, 0);
+                                var sr = sen.AddComponent<SpriteRenderer>();
+                                sr.sprite = map.tileSet.GetSprite(tile.TileId-1);
+                            }
                             var c = en.AddComponent<BoxCollider2D>();
                             c.size = new Vector2(map.tileWidth*2, map.tileHeight);
                             en.AddComponent<SolidComponent>();
