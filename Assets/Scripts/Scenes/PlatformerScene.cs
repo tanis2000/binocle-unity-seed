@@ -62,6 +62,7 @@ namespace App
             VersionText = GameObject.Find("VersionText").GetComponent<Text>();
             VersionText.text = ((App.Game)Game).Version;
             Application.targetFrameRate = 60; // we try to chieve 60 FPS
+            Platformer.EntityFactory.Init();
             
             TilesTexture = Resources.Load ("Sprites/tiles", typeof(Texture2D)) as Texture2D;
 

@@ -9,6 +9,14 @@ namespace App.Platformer
     public static class EntityFactory
     {
         public static Game Game;
+        public static EntityPool<Bullet> BulletsPool;
+
+        public static void Init()
+        {
+            BulletsPool = new EntityPool<Bullet>(Game.Scene);
+            BulletsPool.WarmCache(10);
+        }
+
         public static Entity CreatePlayer(Entity parent, Vector2 startingPosition)
         {
             var e = Game.Scene.CreateEntity<Hero>("player");
@@ -251,7 +259,8 @@ namespace App.Platformer
 
         public static Entity CreateBullet(Vector2 startingPosition, Vector2 velocity)
         {
-            var e = Game.Scene.CreateEntity<Bullet>("bullet");
+            var e = BulletsPool.Obtain("bullet");
+            //var e = Game.Scene.CreateEntity<Bullet>("bullet");
             e.gameObject.layer = LayerMask.NameToLayer("Bullets");
             e.CollisionLayersMask = 1 << LayerMask.NameToLayer("Heroes") | 1 << LayerMask.NameToLayer("Blocks");
             e.Velocity = velocity;
