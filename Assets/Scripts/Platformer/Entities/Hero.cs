@@ -345,7 +345,7 @@ namespace App.Platformer
         public override bool OnBulletHit(Bullet bullet)
         {
             Hurt(bullet);
-            Destroy(bullet);
+            EntityFactory.BulletsPool.Free(bullet);
             return true;
         }
 
