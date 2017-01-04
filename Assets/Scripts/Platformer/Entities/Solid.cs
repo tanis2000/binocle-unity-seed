@@ -42,12 +42,13 @@ namespace App.Platformer
         {
             Mover = this;
             SubPixelCounter += moveAmount;
-            int dx = (int) Math.Round((double) SubPixelCounter.x);
-            int dy = (int) Math.Round((double) SubPixelCounter.y);
+            int dx = Mathf.RoundToInt(SubPixelCounter.x);
+            int dy = Mathf.RoundToInt(SubPixelCounter.y);
             if ((dx != 0) || (dy != 0))
             {
                 riding.Clear();
-                foreach (Actor actor in FindObjectsOfType<Actor>())
+                var actors = FindObjectsOfType<Actor>();
+                foreach (Actor actor in actors)
                 {
                     if (actor.IsRiding(this))
                     {
@@ -68,7 +69,7 @@ namespace App.Platformer
                     transform.position = tempPos;
                     if (dx > 0)
                     {
-                        foreach (Actor actor in FindObjectsOfType(typeof(Actor)))
+                        foreach (Actor actor in actors)
                         {
                             actor.EnableSolids();
                             var ac = actor.GetComponent<Collider2D>();
@@ -98,7 +99,7 @@ namespace App.Platformer
                     }
                     else
                     {
-                        foreach (Actor actor in FindObjectsOfType(typeof(Actor)))
+                        foreach (Actor actor in actors)
                         {
                             actor.EnableSolids();
                             var ac = actor.GetComponent<Collider2D>();
@@ -135,7 +136,7 @@ namespace App.Platformer
                     // Moving downwards
                     if (dy < 0)
                     {
-                        foreach (Actor actor in FindObjectsOfType(typeof(Actor)))
+                        foreach (Actor actor in actors)
                         {
                             actor.EnableSolids();
                             var ac = actor.GetComponent<Collider2D>();
@@ -164,7 +165,7 @@ namespace App.Platformer
                     // Moving upwards
                     else
                     {
-                        foreach (Actor actor in FindObjectsOfType(typeof(Actor)))
+                        foreach (Actor actor in actors)
                         {
                             actor.EnableSolids();
                             var ac = actor.GetComponent<Collider2D>();

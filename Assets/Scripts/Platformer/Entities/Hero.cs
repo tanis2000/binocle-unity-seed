@@ -218,8 +218,8 @@ namespace App.Platformer
             scale.Scale.x = Utils.Approach(scale.Scale.x, 1.0f, 0.05f);
 			scale.Scale.y = Utils.Approach(scale.Scale.y, 1.0f, 0.05f);
 
-            MoveH(Velocity.x * (Time.deltaTime / 0.01666667f));
-            MoveV(Velocity.y * (Time.deltaTime / 0.01666667f));
+            MoveH(Velocity.x * Game.TimeMult);
+            MoveV(Velocity.y * Game.TimeMult);
 
             scale.transform.localScale = scale.Scale;
 

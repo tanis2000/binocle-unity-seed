@@ -28,7 +28,8 @@ namespace App.Platformer
         protected override void Update()
         {
             base.Update();
-            MoveTowards(moveTarget, 0.4f * (Time.deltaTime / 0.01666667f));
+
+            MoveTowards(moveTarget, 0.4f * Game.TimeMult);
             if (transform.position.x == moveTarget.x && transform.position.y == moveTarget.y) {
                 if (moveTarget == End) {
                     moveTarget = start;
