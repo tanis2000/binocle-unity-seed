@@ -255,6 +255,12 @@ namespace App.Platformer
             Move(vector - ActualPosition, null, null);
         }
 
+        public void ResetSubpixelCounter()
+        {
+            SubPixelCounter.x = 0;
+            SubPixelCounter.y = 0;
+        }
+
 
         public virtual void DisableSolids()
         {

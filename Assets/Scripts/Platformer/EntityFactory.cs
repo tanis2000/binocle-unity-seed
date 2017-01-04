@@ -32,7 +32,6 @@ namespace App.Platformer
             var c = e.AddComponent<BoxCollider2D>();
             c.size = new Vector2(10, 10);
             ce.AddComponent<ScaleComponent>();
-            e.transform.localPosition = startingPosition;
             var spriteAnimator = ce.AddComponent<SpriteAnimator>();
             SpriteAnimation sa = new SpriteAnimation ();
             sa.fps = 6;
@@ -56,6 +55,11 @@ namespace App.Platformer
             spriteAnimator.AddAnimation(sa);
 
             spriteAnimator.Play("idle");
+
+            var ball = EntityFactory.CreateBall(e);
+            e.Ball = ball as Ball;
+
+            e.transform.localPosition = startingPosition;
             return e;
         }
 
@@ -261,6 +265,12 @@ namespace App.Platformer
         {
             var e = BulletsPool.Obtain("bullet");
             //var e = Game.Scene.CreateEntity<Bullet>("bullet");
+            e.SetParent((Game.Scene as PlatformerScene).MapEntity);
+            e.Velocity = velocity;
+            e.transform.position = startingPosition;
+            e.Reset();
+            //var e = Game.Scene.CreateEntity<Bullet>("bullet");
+            /*            
             e.gameObject.layer = LayerMask.NameToLayer("Bullets");
             e.CollisionLayersMask = 1 << LayerMask.NameToLayer("Heroes") | 1 << LayerMask.NameToLayer("Blocks");
             e.Velocity = velocity;
@@ -272,6 +282,24 @@ namespace App.Platformer
             c.size = new Vector2(4, 4);
             ce.AddComponent<ScaleComponent>();
             e.transform.position = startingPosition;
+            */
+            return e;
+        }
+
+        public static Entity CreateBall(Hero hero)
+        {
+            var e = Game.Scene.CreateEntity<Ball>("ball");
+            e.gameObject.layer = LayerMask.NameToLayer("Balls");
+            e.CollisionLayersMask = 1 << LayerMask.NameToLayer("Blocks") | 1 << LayerMask.NameToLayer("Enemies");
+            e.Hero = hero;
+            var ce = Game.Scene.CreateEntity("sprite");
+            ce.SetParent(e);
+            var sr = ce.AddComponent<SpriteRenderer>();
+            sr.sprite = Utils.CreateBoxSprite(6, 6, new Color(1, 1f, 1f, 1));
+            sr.sortingOrder = 1;
+            var c = e.AddComponent<BoxCollider2D>();
+            c.size = new Vector2(6, 6);
+            ce.AddComponent<ScaleComponent>();
             return e;
         }
 

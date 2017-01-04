@@ -45,6 +45,7 @@ namespace App.Platformer
         public bool Dead { get; private set; }
         public Vector2 SpawnPosition = Vector2.zero;
         public int Facing = 1;
+        public Ball Ball;
 
         protected override void Start()
         {
@@ -65,7 +66,7 @@ namespace App.Platformer
 			bool kDown = input.Down;
 			bool kJump = input.Jump && !input.WasJump; // check that jump has just been pressed
 			bool kJumpRelease = !input.Jump && input.WasJump; // check that jump has just been released
-			bool kFire = false;
+			bool kFire = input.Fire && !input.WasFire;
             // Temporary vars
 			float tempAccel, tempFric;
 
@@ -161,10 +162,12 @@ namespace App.Platformer
 					Velocity.y = jumpHeightStickY;
 				}
 			}
+            // Fire
 			if(kFire){
 				Velocity.y = 0;
 				scale.Scale.x = 0.5f;
 				scale.Scale.y = 1.5f;
+                Ball.Shoot();
 			}
 
 			// Ladders

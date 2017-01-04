@@ -25,6 +25,13 @@ namespace App.Platformer
             private set;
         }
 
+        protected virtual void Awake()
+        {
+            if (Scene is PlatformerScene) {
+                GameScene = Scene as PlatformerScene;
+            }
+        }
+
         protected virtual void Start()
         {
             if (Scene is PlatformerScene) {
@@ -103,6 +110,11 @@ namespace App.Platformer
         }
 
         public virtual bool OnBulletHit(Bullet bullet)
+        {
+            return false;
+        }
+
+        public virtual bool OnBallHit(Ball ball)
         {
             return false;
         }

@@ -221,6 +221,12 @@ namespace App.Platformer
             return true;
         }
 
+        public override bool OnBallHit(Ball ball)
+        {
+            ball.ReturnHome();
+            return true;
+        }
+
 
 
     }
