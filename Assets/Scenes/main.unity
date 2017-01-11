@@ -597,6 +597,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9409e0061739449cd925d6759b3f61e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsFixedTimeStep: 0
   gameState: 0
   WorldCanvas: {fileID: 0}
   GUICanvas: {fileID: 0}
