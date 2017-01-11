@@ -82,6 +82,9 @@ namespace App.Platformer
 				// Squash + stretch
 				scale.Scale.x = 1.5f;
 				scale.Scale.y = 0.5f;
+                var pos = transform.position;
+                pos.y -= coll.bounds.size.y/2;
+                EntityFactory.CreatePuff(pos);
 			}
 
 			// Apply the correct form of acceleration and friction

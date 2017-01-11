@@ -303,6 +303,25 @@ namespace App.Platformer
             return e;
         }
 
+        public static Entity CreatePuff(Vector2 position)
+        {
+            var e = Game.Scene.CreateEntity<Puff>("puff");
+            var ps = e.AddComponent<ParticleSystem>();
+            var r = e.GetComponent<ParticleSystemRenderer>();
+            r.sortingLayerName = "units";
+            r.sharedMaterial = Resources.Load<Material>("Materials/Particle");
+            var main = ps.main;
+            main.playOnAwake = false;
+            main.duration = 0.5f;
+            main.loop = false;
+            main.startSpeed = 10;
+            main.gravityModifier = 1;
+            var colt = ps.colorOverLifetime;
+            ps.Play();
+            e.transform.position = position;
+            return e;
+        }
+
 
         public static Map.Level LoadLevel(int number)
         {
