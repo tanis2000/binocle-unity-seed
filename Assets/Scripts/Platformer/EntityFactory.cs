@@ -306,7 +306,11 @@ namespace App.Platformer
         public static Entity CreatePuff(Vector2 position)
         {
             var e = Game.Scene.CreateEntity<Puff>("puff");
+            var go = GameObject.Instantiate(Resources.Load("Particles/Dust"), Vector3.zero, Quaternion.identity) as GameObject;
+            go.transform.SetParent(e.transform);
+            /*
             var ps = e.AddComponent<ParticleSystem>();
+            ps.Stop();
             var r = e.GetComponent<ParticleSystemRenderer>();
             r.sortingLayerName = "units";
             r.sharedMaterial = Resources.Load<Material>("Materials/Particle");
@@ -318,6 +322,7 @@ namespace App.Platformer
             main.gravityModifier = 1;
             var colt = ps.colorOverLifetime;
             ps.Play();
+            */
             e.transform.position = position;
             return e;
         }

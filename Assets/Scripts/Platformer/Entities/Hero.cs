@@ -238,6 +238,7 @@ namespace App.Platformer
 				}
 			}
 
+
             OnGroundPrev = BottomCollided;
 			OnTopPrev = TopCollided;
 			OnLeftPrev = LeftCollided;
