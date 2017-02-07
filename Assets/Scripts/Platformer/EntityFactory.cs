@@ -257,6 +257,18 @@ namespace App.Platformer
             sa.id = 0;
             sa.sequenceCode = "0-3:forever";
             spriteAnimator.AddAnimation(sa);
+
+            sa = new SpriteAnimation ();
+            sa.fps = 6;
+            res = Resources.LoadAll<Sprite>("Sprites/turret-die");
+            sa.AddFrame(res[0]);
+            sa.AddFrame(res[1]);
+            sa.AddFrame(res[2]);
+            sa.name = "die";
+            sa.id = 1;
+            sa.sequenceCode = "0-2";
+            spriteAnimator.AddAnimation(sa);
+
             spriteAnimator.Play("idle");
             return e;
         }
@@ -308,21 +320,6 @@ namespace App.Platformer
             var e = Game.Scene.CreateEntity<Puff>("puff");
             var go = GameObject.Instantiate(Resources.Load("Particles/Dust"), Vector3.zero, Quaternion.identity) as GameObject;
             go.transform.SetParent(e.transform);
-            /*
-            var ps = e.AddComponent<ParticleSystem>();
-            ps.Stop();
-            var r = e.GetComponent<ParticleSystemRenderer>();
-            r.sortingLayerName = "units";
-            r.sharedMaterial = Resources.Load<Material>("Materials/Particle");
-            var main = ps.main;
-            main.playOnAwake = false;
-            main.duration = 0.5f;
-            main.loop = false;
-            main.startSpeed = 10;
-            main.gravityModifier = 1;
-            var colt = ps.colorOverLifetime;
-            ps.Play();
-            */
             e.transform.position = position;
             return e;
         }

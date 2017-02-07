@@ -41,5 +41,10 @@ namespace App.Platformer
             return hero;
         }
 
+        public virtual void Die()
+        {
+            Health = 0;
+        }
+
     }
 }
