@@ -35,13 +35,14 @@ namespace App
             if (!SetupDone)
             {
                 // Everything that needs at least the processors to be set up should go in there
-                var mapFile = Resources.Load<TextAsset>("Levels/level-001");
+                var mapFile = Resources.Load<TextAsset>("Levels/level-002");
                 Debug.Log(mapFile);
                 var tiledMap = new TmxMap(mapFile.text);
                 Debug.Log(tiledMap);
                 var tm = Platformer.EntityFactory.CreateTileMapFromTiledMap(tiledMap, TilesTexture);
                 Debug.Log(tm.tileSet.GetSprite(0));
                 MapEntity = Platformer.EntityFactory.CreateMapFromTiledMap(tm, ref PlayerSpawnPosition);
+                Platformer.EntityFactory.CreateRain(new Vector2((MapEntity.transform.position.x + tiledMap.Width*tiledMap.TileWidth) / 2, MapEntity.transform.position.y + tiledMap.Height*tiledMap.TileHeight), tiledMap.Width*tiledMap.TileWidth);
                 Map = Platformer.EntityFactory.CreateMapFromTiledMap(tiledMap, MapEntity);
                 Hero = Platformer.EntityFactory.CreatePlayer(MapEntity, Map.PlayerSpawnPosition);
                 //var level = Platformer.EntityFactory.LoadLevel(1);
@@ -64,7 +65,7 @@ namespace App
             Application.targetFrameRate = 60; // we try to chieve 60 FPS
             Platformer.EntityFactory.Init();
             
-            TilesTexture = Resources.Load ("Sprites/tiles", typeof(Texture2D)) as Texture2D;
+            TilesTexture = Resources.Load ("Sprites/tileset3", typeof(Texture2D)) as Texture2D;
 
             /*
                   gameOverText = GameObject.Find("gameover-label").GetComponent<Text>();

@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 95b9f1866a3564ad98aceebfee299c6c
-timeCreated: 1483021881
+guid: 9564b8bb6f6894fcf8590683c190c487
+timeCreated: 1486674111
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName: {}
@@ -34,7 +34,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -118,7 +118,7 @@ TextureImporter:
     serializedVersion: 2
     sprites: []
     outline: []
-  spritePackingTag: 
+  spritePackingTag: tileset
   userData: 
   assetBundleName: 
   assetBundleVariant: 

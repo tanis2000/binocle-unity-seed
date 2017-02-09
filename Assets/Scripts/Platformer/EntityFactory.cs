@@ -324,6 +324,20 @@ namespace App.Platformer
             return e;
         }
 
+        public static Entity CreateRain(Vector2 position, float width)
+        {
+            var e = Game.Scene.CreateEntity<Rain>("rain");
+            var go = GameObject.Instantiate(Resources.Load("Particles/Rain"), Vector3.zero, Quaternion.identity) as GameObject;
+            go.transform.SetParent(e.transform);
+            e.transform.position = position;
+            var systems = go.GetComponentsInChildren<ParticleSystem>();
+            foreach(var ps in systems) {
+                var s = ps.shape;
+                s.box = new Vector3(width, 1, 1);
+            }
+            return e;
+        }
+
 
         public static Map.Level LoadLevel(int number)
         {
