@@ -53,9 +53,7 @@ namespace App.Platformer
         }
 
         public override bool OnBallHit(Ball ball) {
-            Die();
-            ball.ReturnHome();
-            return true;
+            return base.OnBallHit(ball);
         }
 
         public override void Die() {

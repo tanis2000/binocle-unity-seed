@@ -41,6 +41,12 @@ namespace App.Platformer
             return hero;
         }
 
+        public override bool OnBallHit(Ball ball) {
+            Die();
+            ball.ReturnHome();
+            return true;
+        }
+
         public virtual void Die()
         {
             Health = 0;

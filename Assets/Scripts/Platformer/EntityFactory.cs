@@ -156,6 +156,16 @@ namespace App.Platformer
                             CreateRainStopper(pos, (float)obj.Width, (float)obj.Height);
                         }
                     }
+                } else if (layer.Name == "cats") {
+                    foreach(var obj in layer.Objects) {
+                        var pos = new Vector2((float)obj.X, (map.Height - 1) * map.TileHeight - (float)obj.Y);
+                        CreateCat(parent, pos);
+                    }
+                } else if (layer.Name == "pidgeons") {
+                    foreach(var obj in layer.Objects) {
+                        var pos = new Vector2((float)obj.X, (map.Height - 1) * map.TileHeight - (float)obj.Y);
+                        CreatePidgeon(parent, pos);
+                    }
                 }
             }
             return m;
@@ -355,6 +365,72 @@ namespace App.Platformer
             e.gameObject.layer = LayerMask.NameToLayer("FxStopper");
             var c = e.AddComponent<BoxCollider2D>();
             c.size = new Vector2(width, height);
+            return e;
+        }
+
+        public static Entity CreatePidgeon(Entity parent, Vector2 startingPosition)
+        {
+            var e = Game.Scene.CreateEntity<Pidgeon>("pidgeon");
+            e.SetParent(parent);
+            e.gameObject.layer = LayerMask.NameToLayer("Enemies");
+            e.CollisionLayersMask = 1 << LayerMask.NameToLayer("Blocks");
+            var ce = Game.Scene.CreateEntity("sprite");
+            ce.SetParent(e);
+            var sr = ce.AddComponent<SpriteRenderer>();
+            var c = e.AddComponent<BoxCollider2D>();
+            c.size = new Vector2(16, 16);
+            ce.AddComponent<ScaleComponent>();
+            e.transform.localPosition = startingPosition;
+            var spriteAnimator = ce.AddComponent<SpriteAnimator>();
+            SpriteAnimation sa = new SpriteAnimation ();
+            sa.fps = 6;
+            var res = Resources.LoadAll<Sprite>("Sprites/pidgeon");
+            sa.AddFrame(res[0]);
+            sa.AddFrame(res[1]);
+            sa.AddFrame(res[2]);
+            sa.name = "idle";
+            sa.id = 0;
+            sa.sequenceCode = "0-2:forever";
+            spriteAnimator.AddAnimation(sa);
+
+            sa = new SpriteAnimation ();
+            sa.fps = 6;
+            sa.AddFrame(res[3]);
+            sa.AddFrame(res[4]);
+            sa.name = "fly";
+            sa.id = 1;
+            sa.sequenceCode = "0-1";
+            spriteAnimator.AddAnimation(sa);
+
+            spriteAnimator.Play("idle");
+            return e;
+        }
+
+        public static Entity CreateCat(Entity parent, Vector2 startingPosition)
+        {
+            var e = Game.Scene.CreateEntity<Cat>("cat");
+            e.SetParent(parent);
+            e.gameObject.layer = LayerMask.NameToLayer("Enemies");
+            e.CollisionLayersMask = 1 << LayerMask.NameToLayer("Blocks");
+            var ce = Game.Scene.CreateEntity("sprite");
+            ce.SetParent(e);
+            var sr = ce.AddComponent<SpriteRenderer>();
+            var c = e.AddComponent<BoxCollider2D>();
+            c.size = new Vector2(10, 10);
+            ce.AddComponent<ScaleComponent>();
+            e.transform.localPosition = startingPosition;
+            var spriteAnimator = ce.AddComponent<SpriteAnimator>();
+            SpriteAnimation sa = new SpriteAnimation ();
+            sa.fps = 6;
+            var res = Resources.LoadAll<Sprite>("Sprites/cat");
+            sa.AddFrame(res[0]);
+            sa.AddFrame(res[1]);
+            sa.name = "idle";
+            sa.id = 0;
+            sa.sequenceCode = "0-1:forever";
+            spriteAnimator.AddAnimation(sa);
+
+            spriteAnimator.Play("idle");
             return e;
         }
 
