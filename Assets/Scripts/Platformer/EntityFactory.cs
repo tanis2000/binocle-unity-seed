@@ -146,6 +146,16 @@ namespace App.Platformer
                         var pos = new Vector2((float)obj.X, (map.Height - 1) * map.TileHeight - (float)obj.Y);
                         CreateTurret(parent, pos);
                     }
+                } else if (layer.Name == "fx") {
+                    foreach(var obj in layer.Objects) {
+                        if (obj.Name == "rain") {
+                            var pos = new Vector2((float)obj.X + (float)(obj.Width/2), (map.Height - 1) * map.TileHeight - (float)obj.Y);
+                            CreateRain(pos, (float)obj.Width);
+                        } else if (obj.Name == "rainstop") {
+                            var pos = new Vector2((float)obj.X + (float)(obj.Width/2), (map.Height - 1) * map.TileHeight - (float)obj.Y);
+                            CreateRainStopper(pos, (float)obj.Width, (float)obj.Height);
+                        }
+                    }
                 }
             }
             return m;
@@ -335,6 +345,16 @@ namespace App.Platformer
                 var s = ps.shape;
                 s.box = new Vector3(width, 1, 1);
             }
+            return e;
+        }
+
+        public static Entity CreateRainStopper(Vector2 position, float width, float height)
+        {
+            var e = Game.Scene.CreateEntity<Entity>("rainstopper");
+            e.transform.position = position;
+            e.gameObject.layer = LayerMask.NameToLayer("FxStopper");
+            var c = e.AddComponent<BoxCollider2D>();
+            c.size = new Vector2(width, height);
             return e;
         }
 

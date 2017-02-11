@@ -42,7 +42,7 @@ namespace App
                 var tm = Platformer.EntityFactory.CreateTileMapFromTiledMap(tiledMap, TilesTexture);
                 Debug.Log(tm.tileSet.GetSprite(0));
                 MapEntity = Platformer.EntityFactory.CreateMapFromTiledMap(tm, ref PlayerSpawnPosition);
-                Platformer.EntityFactory.CreateRain(new Vector2((MapEntity.transform.position.x + tiledMap.Width*tiledMap.TileWidth) / 2, MapEntity.transform.position.y + tiledMap.Height*tiledMap.TileHeight), tiledMap.Width*tiledMap.TileWidth);
+                //Platformer.EntityFactory.CreateRain(new Vector2((MapEntity.transform.position.x + tiledMap.Width*tiledMap.TileWidth) / 2, MapEntity.transform.position.y + tiledMap.Height*tiledMap.TileHeight), tiledMap.Width*tiledMap.TileWidth);
                 Map = Platformer.EntityFactory.CreateMapFromTiledMap(tiledMap, MapEntity);
                 Hero = Platformer.EntityFactory.CreatePlayer(MapEntity, Map.PlayerSpawnPosition);
                 //var level = Platformer.EntityFactory.LoadLevel(1);

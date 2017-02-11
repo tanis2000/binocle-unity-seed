@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="40" height="30" tilewidth="16" tileheight="16" nextobjectid="6">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="40" height="30" tilewidth="16" tileheight="16" nextobjectid="9">
  <tileset firstgid="1" name="tiles" tilewidth="16" tileheight="16" tilecount="3">
   <image source="../Sprites/tiles.png" width="48" height="16"/>
  </tileset>
@@ -48,5 +48,9 @@
   <object id="5" name="turret" x="148" y="160" width="16" height="16">
    <ellipse/>
   </object>
+ </objectgroup>
+ <objectgroup name="fx">
+  <object id="6" name="rain" x="16" y="16" width="608" height="16"/>
+  <object id="8" name="rainstop" x="0" y="464" width="640" height="56"/>
  </objectgroup>
 </map>
