@@ -6,5 +6,9 @@ namespace App.Platformer
 {
     public class Cat : Actor
     {
+        public override bool OnBallHit(Ball ball) {
+            ball.ReturnHome();
+            return true;
+        }
     }
 }
