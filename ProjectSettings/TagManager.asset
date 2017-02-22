@@ -41,9 +41,12 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: bgtiles
+    uniqueID: 2667325003
+    locked: 0
   - name: units
     uniqueID: 867347271
     locked: 0
-  - name: bgtiles
-    uniqueID: 2667325003
+  - name: hero
+    uniqueID: 3046896475
     locked: 0

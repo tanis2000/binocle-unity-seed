@@ -36,6 +36,9 @@ namespace App.Platformer
             base.Start();
             tempPos = transform.position;
             coll = GetComponent<Collider2D>();
+            if (coll == null) {
+                Debug.LogWarning("Actor " + name + " doesn't have a collider");
+            }
         }
 
         public virtual bool IsRiding(Solid solid)

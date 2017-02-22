@@ -28,6 +28,7 @@ namespace App.Platformer
             var ce = Game.Scene.CreateEntity("sprite");
             ce.SetParent(e);
             var sr = ce.AddComponent<SpriteRenderer>();
+            sr.sortingLayerName = "hero";
             //sr.sprite = Utils.CreateBoxSprite(8, 8, new Color(1, 1, 1, 1));
             var c = e.AddComponent<BoxCollider2D>();
             c.size = new Vector2(10, 10);
@@ -55,6 +56,8 @@ namespace App.Platformer
             spriteAnimator.AddAnimation(sa);
 
             spriteAnimator.Play("idle");
+
+			e.AddComponent<CameraShake>();
 
             var ball = EntityFactory.CreateBall(e);
             e.Ball = ball as Ball;
@@ -188,6 +191,7 @@ namespace App.Platformer
                             en.SetParent(e);
                             en.gameObject.layer = LayerMask.NameToLayer("Blocks");
                             var sr = en.AddComponent<SpriteRenderer>();
+                            sr.sortingLayerName = "bgtiles";
                             //sr.sprite = Utils.CreateBoxSprite(8, 8, new Color(0, 1, 0, 1));
                             sr.sprite = map.tileSet.GetSprite(tile.TileId-1);
                             var c = en.AddComponent<BoxCollider2D>();
@@ -204,6 +208,7 @@ namespace App.Platformer
                                 sen.SetParent(en);
                                 sen.transform.localPosition = new Vector2(map.tileWidth/2*i, 0);
                                 var sr = sen.AddComponent<SpriteRenderer>();
+                                sr.sortingLayerName = "bgtiles";
                                 sr.sprite = map.tileSet.GetSprite(tile.TileId-1);
                             }
                             var c = en.AddComponent<BoxCollider2D>();
@@ -222,6 +227,7 @@ namespace App.Platformer
                                 sen.SetParent(en);
                                 sen.transform.localPosition = new Vector2(map.tileWidth/2*i, 0);
                                 var sr = sen.AddComponent<SpriteRenderer>();
+                                sr.sortingLayerName = "bgtiles";
                                 sr.sprite = map.tileSet.GetSprite(tile.TileId-1);
                             }
                             var c = en.AddComponent<BoxCollider2D>();
@@ -235,6 +241,7 @@ namespace App.Platformer
                             en.SetParent(e);
                             en.gameObject.layer = LayerMask.NameToLayer("Backgrounds");
                             var sr = en.AddComponent<SpriteRenderer>();
+                            sr.sortingLayerName = "bgtiles";
                             sr.sortingOrder = -1;
                             sr.sprite = map.tileSet.GetSprite(tile.TileId-1);
                             en.transform.localPosition = new Vector2(x * map.tileWidth, (map.height - 1 - y) * map.tileHeight);
@@ -260,6 +267,7 @@ namespace App.Platformer
             var ce = Game.Scene.CreateEntity("sprite");
             ce.SetParent(e);
             var sr = ce.AddComponent<SpriteRenderer>();
+            sr.sortingLayerName = "units";
             //sr.sprite = Utils.CreateBoxSprite(8, 8, new Color(0.8f, 0.8f, 0, 1));
             var c = e.AddComponent<BoxCollider2D>();
             c.size = new Vector2(8, 8);
@@ -327,6 +335,7 @@ namespace App.Platformer
             var ce = Game.Scene.CreateEntity("sprite");
             ce.SetParent(e);
             var sr = ce.AddComponent<SpriteRenderer>();
+            sr.sortingLayerName = "hero";
             sr.sprite = Utils.CreateBoxSprite(6, 6, new Color(1, 1f, 1f, 1));
             sr.sortingOrder = 1;
             var c = e.AddComponent<BoxCollider2D>();
@@ -373,10 +382,11 @@ namespace App.Platformer
             var e = Game.Scene.CreateEntity<Pidgeon>("pidgeon");
             e.SetParent(parent);
             e.gameObject.layer = LayerMask.NameToLayer("Enemies");
-            e.CollisionLayersMask = 1 << LayerMask.NameToLayer("Blocks");
+            e.CollisionLayersMask = 0;//1 << LayerMask.NameToLayer("Blocks");
             var ce = Game.Scene.CreateEntity("sprite");
             ce.SetParent(e);
             var sr = ce.AddComponent<SpriteRenderer>();
+            sr.sortingLayerName = "units";
             var c = e.AddComponent<BoxCollider2D>();
             c.size = new Vector2(16, 16);
             ce.AddComponent<ScaleComponent>();
@@ -415,6 +425,7 @@ namespace App.Platformer
             var ce = Game.Scene.CreateEntity("sprite");
             ce.SetParent(e);
             var sr = ce.AddComponent<SpriteRenderer>();
+            sr.sortingLayerName = "units";
             var c = e.AddComponent<BoxCollider2D>();
             c.size = new Vector2(10, 10);
             ce.AddComponent<ScaleComponent>();
@@ -431,6 +442,15 @@ namespace App.Platformer
             spriteAnimator.AddAnimation(sa);
 
             spriteAnimator.Play("idle");
+            return e;
+        }
+
+        public static Entity CreateFlames(Vector2 position)
+        {
+            var e = Game.Scene.CreateEntity<Flames>("flames");
+            var go = GameObject.Instantiate(Resources.Load("Particles/Flames"), Vector3.zero, Quaternion.identity) as GameObject;
+            go.transform.SetParent(e.transform);
+            e.transform.position = position;
             return e;
         }
 

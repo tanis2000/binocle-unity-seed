@@ -19,6 +19,7 @@ namespace App.Platformer
             var ce = Scene.CreateEntity("sprite");
             ce.SetParent(this);
             var sr = ce.AddComponent<SpriteRenderer>();
+            sr.sortingLayerName = "units";
             sr.sprite = Utils.CreateBoxSprite(4, 4, new Color(0, 0.8f, 0.8f, 1));
             var c = AddComponent<BoxCollider2D>();
             c.size = new Vector2(4, 4);

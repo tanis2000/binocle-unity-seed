@@ -334,6 +334,7 @@ namespace App.Platformer
             Dead = true;
             Debug.Log("DEAD!");
             spriteAnimator.Play("die", false);
+            GetComponent<CameraShake>().shake(20, 0.95f);
             StartCoroutine(Respawn(3));
         }
 
