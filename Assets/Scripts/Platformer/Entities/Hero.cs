@@ -350,6 +350,10 @@ namespace App.Platformer
             Die();
         }
 
+        public void Hurt(DamageType damageType) {
+            Die();
+        }
+
         public override bool OnBulletHit(Bullet bullet)
         {
             Hurt(bullet);

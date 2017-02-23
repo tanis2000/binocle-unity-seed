@@ -50,3 +50,6 @@ TagManager:
   - name: hero
     uniqueID: 3046896475
     locked: 0
+  - name: fgtiles
+    uniqueID: 1611602377
+    locked: 0

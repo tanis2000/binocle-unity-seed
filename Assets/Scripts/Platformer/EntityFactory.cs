@@ -235,13 +235,21 @@ namespace App.Platformer
                             en.AddComponent<SolidComponent>();
                             en.transform.localPosition = new Vector2(x * map.tileWidth - map.tileWidth/2, (map.height - 1 - y) * map.tileHeight);
                             en.End = new Vector2(en.transform.position.x, en.transform.position.y + map.tileHeight*3);
-                        }
-                        else if (layer.name == "bg" && tile.TileId != 0) {
+                        } else if (layer.name == "bg" && tile.TileId != 0) {
                             var en = Game.Scene.CreateEntity<Entity>(string.Format("bg-{0}-{1}", x, y));
                             en.SetParent(e);
                             en.gameObject.layer = LayerMask.NameToLayer("Backgrounds");
                             var sr = en.AddComponent<SpriteRenderer>();
                             sr.sortingLayerName = "bgtiles";
+                            sr.sortingOrder = -1;
+                            sr.sprite = map.tileSet.GetSprite(tile.TileId-1);
+                            en.transform.localPosition = new Vector2(x * map.tileWidth, (map.height - 1 - y) * map.tileHeight);
+                        } else if (layer.name == "fg" && tile.TileId != 0) {
+                            var en = Game.Scene.CreateEntity<Entity>(string.Format("fg-{0}-{1}", x, y));
+                            en.SetParent(e);
+                            en.gameObject.layer = LayerMask.NameToLayer("Backgrounds");
+                            var sr = en.AddComponent<SpriteRenderer>();
+                            sr.sortingLayerName = "fgtiles";
                             sr.sortingOrder = -1;
                             sr.sprite = map.tileSet.GetSprite(tile.TileId-1);
                             en.transform.localPosition = new Vector2(x * map.tileWidth, (map.height - 1 - y) * map.tileHeight);
@@ -382,7 +390,7 @@ namespace App.Platformer
             var e = Game.Scene.CreateEntity<Pidgeon>("pidgeon");
             e.SetParent(parent);
             e.gameObject.layer = LayerMask.NameToLayer("Enemies");
-            e.CollisionLayersMask = 0;//1 << LayerMask.NameToLayer("Blocks");
+            e.CollisionLayersMask = 1 << LayerMask.NameToLayer("Heroes");
             var ce = Game.Scene.CreateEntity("sprite");
             ce.SetParent(e);
             var sr = ce.AddComponent<SpriteRenderer>();
