@@ -25,6 +25,7 @@ namespace App.Platformer
 		private float gravSlide   = -0.55f;
 		private bool sticking = false;
 		private bool canStick = false;
+        private bool wallStickSupported = false;
         private bool doubleJumped = false;
 
         public bool Grounded;
@@ -96,19 +97,24 @@ namespace App.Platformer
 		    	tempFric  = airFric;
 			}
 
-			// Wall cling to avoid accidental push-off
-			if ((!RightCollided && !LeftCollided) || BottomCollided) {
-				canStick = true;
-				sticking = false;
-			} else if (((kRight && LeftCollided) || (kLeft && RightCollided)) && canStick && !BottomCollided) {
-				sticking = true;
-				canStick = false;
-			}
+            if (wallStickSupported) {
+                // Wall cling to avoid accidental push-off
+                if ((!RightCollided && !LeftCollided) || BottomCollided) {
+                    canStick = true;
+                    sticking = false;
+                } else if (((kRight && LeftCollided) || (kLeft && RightCollided)) && canStick && !BottomCollided) {
+                    canStick = false;
+                    sticking = true;
+                }
 
-			if ((kRight || kLeft) && sticking) {
-				canStick = true;
-				sticking = false;
-			}
+                if ((kRight || kLeft) && sticking) {
+                    canStick = true;
+                    sticking = false;
+                }
+            } else {
+                canStick = false;
+                sticking = false;
+            }
 
             // Handle gravity
 			if (!BottomCollided) {
@@ -140,31 +146,34 @@ namespace App.Platformer
 				Velocity.x = Utils.Approach(Velocity.x, 0, tempFric);
 			}
 
-			// Wall jump
-			float jumpHeightStickY = jumpHeight * 1.1f;
-			if (kJump && LeftCollided && !BottomCollided) {
-				scale.Scale.x = 0.5f;
-				scale.Scale.y = 1.5f;
-				// Wall jump is different when pushing off/towards the wall
-				if (kLeft) {
-					Velocity.x = jumpHeight * 0.25f;
-					Velocity.y = jumpHeightStickY;
-				} else {
-					Velocity.x = 0;//vxMax;
-					Velocity.y = jumpHeightStickY;
-				}
-			} else if (kJump && RightCollided && !BottomCollided) {
-				scale.Scale.x = 0.5f;
-				scale.Scale.y = 1.5f;
-				// Wall jump is different when pushing off/towards the wall
-				if (kRight) {
-					Velocity.x = -jumpHeight * 0.25f;
-					Velocity.y = jumpHeightStickY;
-				} else {
-					Velocity.x = 0;//-vxMax;
-					Velocity.y = jumpHeightStickY;
-				}
-			}
+            if (wallStickSupported) {
+                // Wall jump
+                float jumpHeightStickY = jumpHeight * 1.1f;
+                if (kJump && LeftCollided && !BottomCollided) {
+                    scale.Scale.x = 0.5f;
+                    scale.Scale.y = 1.5f;
+                    // Wall jump is different when pushing off/towards the wall
+                    if (kLeft) {
+                        Velocity.x = jumpHeight * 0.25f;
+                        Velocity.y = jumpHeightStickY;
+                    } else {
+                        Velocity.x = 0;//vxMax;
+                        Velocity.y = jumpHeightStickY;
+                    }
+                } else if (kJump && RightCollided && !BottomCollided) {
+                    scale.Scale.x = 0.5f;
+                    scale.Scale.y = 1.5f;
+                    // Wall jump is different when pushing off/towards the wall
+                    if (kRight) {
+                        Velocity.x = -jumpHeight * 0.25f;
+                        Velocity.y = jumpHeightStickY;
+                    } else {
+                        Velocity.x = 0;//-vxMax;
+                        Velocity.y = jumpHeightStickY;
+                    }
+                }
+            }
+
             // Fire
 			if(kFire){
 				Velocity.y = 0;
