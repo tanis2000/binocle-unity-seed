@@ -56,6 +56,146 @@ namespace Prime31.ZestKit
 	}
 
 
+	#region SpriteRenderer target
+
+
+	public abstract class AbstractSpriteRendererTarget
+	{
+		protected SpriteRenderer _spriteRenderer;
+
+
+		public void prepareForUse( SpriteRenderer spriteRenderer )
+		{
+			_spriteRenderer = spriteRenderer;
+		}
+
+
+		public object getTargetObject()
+		{
+			return _spriteRenderer;
+		}
+	}
+
+
+	public class SpriteRendererColorTarget : AbstractSpriteRendererTarget, ITweenTarget<Color>
+	{
+		public SpriteRendererColorTarget( SpriteRenderer spriteRenderer )
+		{
+			prepareForUse( spriteRenderer );
+		}
+
+
+		public void setTweenedValue( Color value )
+		{
+			// if the babysitter is enabled and we dont validate just silently do nothing
+			if( ZestKit.enableBabysitter && !_spriteRenderer )
+				return;
+
+			_spriteRenderer.color = value;
+		}
+
+
+		public Color getTweenedValue()
+		{
+			return _spriteRenderer.color;
+		}
+	}
+
+
+	public class SpriteRendererAlphaTarget : AbstractSpriteRendererTarget, ITweenTarget<float>
+	{
+		public SpriteRendererAlphaTarget( SpriteRenderer spriteRenderer )
+		{
+			prepareForUse( spriteRenderer);
+		}
+
+
+		public void setTweenedValue( float value )
+		{
+			// if the babysitter is enabled and we dont validate just silently do nothing
+			if( ZestKit.enableBabysitter && !_spriteRenderer )
+				return;
+
+			var color = _spriteRenderer.color;
+			color.a = value;
+			_spriteRenderer.color = color;
+		}
+
+
+		public float getTweenedValue()
+		{
+			return _spriteRenderer.color.a;
+		}
+	}
+
+
+	#endregion
+
+
+    #region Text targets
+
+    public abstract class AbstractTextTarget
+    {
+        protected Text _text;
+
+        public void prepareForUse(Text text)
+        {
+            _text = text;
+        }
+
+        public object getTargetObject()
+        {
+            return _text;
+        }
+    }
+
+    public class TextColorTarget : AbstractTextTarget, ITweenTarget<Color>
+    {
+        public TextColorTarget(Text text)
+        {
+            prepareForUse(text);
+        }
+
+        public void setTweenedValue(Color value)
+        {
+            if (ZestKit.enableBabysitter && !_text)
+                return;
+
+            _text.color = value;
+        }
+
+        public Color getTweenedValue()
+        {
+            return _text.color;
+        }
+    }
+
+    public class TextAlphaTarget : AbstractTextTarget, ITweenTarget<float>
+    {
+        public TextAlphaTarget(Text text)
+        {
+            prepareForUse(text);
+        }
+
+        public void setTweenedValue(float value)
+        {
+            if (ZestKit.enableBabysitter && !_text)
+                return;
+
+            var color = _text.color;
+            color.a = value;
+            _text.color = color;
+        }
+
+        public float getTweenedValue()
+        {
+            return _text.color.a;
+        }
+    }
+
+    #endregion
+
+
 	#region Material targets
 
 	public abstract class AbstractMaterialTarget
@@ -349,7 +489,11 @@ namespace Prime31.ZestKit
 	public class CameraBackgroundColorTarget : AbstractTweenTarget<Camera,Color>
 	{
 		public override void setTweenedValue( Color value )
-		{
+        {
+            // if the babysitter is enabled and we dont validate just silently do nothing
+            if ( ZestKit.enableBabysitter && !validateTarget() )
+                return;
+            
 			_target.backgroundColor = value;
 		}
 
@@ -380,6 +524,10 @@ namespace Prime31.ZestKit
 
 		public override void setTweenedValue( Rect value )
 		{
+            // if the babysitter is enabled and we dont validate just silently do nothing
+            if ( ZestKit.enableBabysitter && !validateTarget() )
+                return;
+            
 			switch( _targetType )
 			{
 				case CameraTargetType.Rect:
@@ -492,7 +640,11 @@ namespace Prime31.ZestKit
 	
 
 		public void setTweenedValue( Color value )
-		{
+        {
+            // if the babysitter is enabled and we dont validate just silently do nothing
+            if( ZestKit.enableBabysitter && !validateTarget() )
+                return;
+            
 			_target.color = value;
 		}
 	}
@@ -507,7 +659,11 @@ namespace Prime31.ZestKit
 
 
 		public override void setTweenedValue( Color value )
-		{
+        {
+            // if the babysitter is enabled and we dont validate just silently do nothing
+            if( ZestKit.enableBabysitter && !validateTarget() )
+                return;
+            
 			_target.color = value;
 		}
 
@@ -569,7 +725,32 @@ namespace Prime31.ZestKit
 	}
 
 
-	public class ScrollRectNormalizedPositionTarget : AbstractTweenTarget<ScrollRect,Vector2>
+    public class RectTransformSizeDeltaTarget : AbstractTweenTarget<RectTransform, Vector2>
+    {
+        public override void setTweenedValue(Vector2 value)
+        {
+            // if the babysitter is enabled and we dont validate just silently do nothing
+            if (ZestKit.enableBabysitter && !validateTarget())
+                return;
+
+            _target.sizeDelta = value;
+        }
+
+
+        public override Vector2 getTweenedValue()
+        {
+            return _target.sizeDelta;
+        }
+
+
+        public RectTransformSizeDeltaTarget(RectTransform rectTransform)
+        {
+            _target = rectTransform;
+        }
+    }
+
+
+    public class ScrollRectNormalizedPositionTarget : AbstractTweenTarget<ScrollRect,Vector2>
 	{
 		public override void setTweenedValue( Vector2 value )
 		{

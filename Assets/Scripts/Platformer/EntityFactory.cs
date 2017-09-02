@@ -370,7 +370,7 @@ namespace App.Platformer
             var systems = go.GetComponentsInChildren<ParticleSystem>();
             foreach(var ps in systems) {
                 var s = ps.shape;
-                s.box = new Vector3(width, 1, 1);
+                s.scale = new Vector3(width, 1, 1);
             }
             return e;
         }

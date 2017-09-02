@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+#if UNITY_5_4_OR_NEWER
+using UnityEngine.SceneManagement;
+#endif
 
 
 namespace Prime31.ZestKit
@@ -45,12 +48,22 @@ namespace Prime31.ZestKit
 		/// internal list of all the currently active tweens
 		/// </summary>
 		List<ITweenable> _activeTweens = new List<ITweenable>();
+		List<ITweenable> _tempTweens = new List<ITweenable>();
+
+		/// <summary>
+		/// stores tweens marked for removal
+		/// </summary>
+		List<ITweenable> _removedTweens = new List<ITweenable>();
 
 		/// <summary>
 		/// guard to stop instances being created while the application is quitting
 		/// </summary>
 		static bool _applicationIsQuitting;
 
+		/// <summary>
+		/// flag when updating active tweens
+		/// </summary>
+		bool _isUpdating;
 
 		/// <summary>
 		/// holds the singleton instance. creates one on demand if none exists.
@@ -62,7 +75,7 @@ namespace Prime31.ZestKit
 			{
 				if( !_instance && !_applicationIsQuitting )
 				{
-					// check if there is a GoKitLite instance already available in the scene graph before creating one
+					// check if there is a ZestKit instance already available in the scene graph before creating one
 					_instance = FindObjectOfType( typeof( ZestKit ) ) as ZestKit;
 
 					if( !_instance )
@@ -84,8 +97,12 @@ namespace Prime31.ZestKit
 		{
 			if( _instance == null )
 				_instance = this;
-		}
 
+			#if UNITY_5_4_OR_NEWER
+			SceneManager.sceneLoaded -= OnSceneWasLoaded;
+			SceneManager.sceneLoaded += OnSceneWasLoaded;
+			#endif
+		}
 
 		void OnApplicationQuit()
 		{
@@ -95,22 +112,48 @@ namespace Prime31.ZestKit
 		}
 
 
+		#if UNITY_5_4_OR_NEWER
+
+		void OnSceneWasLoaded( Scene scene, LoadSceneMode loadSceneMode )
+		{
+			if( loadSceneMode == LoadSceneMode.Single && removeAllTweensOnLevelLoad )
+				_activeTweens.Clear();
+		}
+
+		#else
+
 		void OnLevelWasLoaded( int level )
 		{
 			if( removeAllTweensOnLevelLoad )
 				_activeTweens.Clear();
 		}
 
+		#endif
+
 
 		void Update()
 		{
-			// loop backwards so we can remove completed tweens
-			for( var i = _activeTweens.Count - 1; i >= 0; --i )
+			_isUpdating = true;
+
+			_tempTweens.Clear();
+			_tempTweens.AddRange( _activeTweens );
+			for( var i = 0; i < _tempTweens.Count; i++ )
 			{
-				var tween = _activeTweens[i];
+				var tween = _tempTweens[i];
+				if( _removedTweens.Contains( tween ) )
+					continue; // was already recycled
+
+				// update tween
 				if( tween.tick() )
-					removeTween( tween, i );
+				{
+					// tween completed
+					tween.recycleSelf();
+					_activeTweens.Remove( tween );
+				}
 			}
+
+			_removedTweens.Clear();
+			_isUpdating = false;
 		}
 
 		#endregion
@@ -129,26 +172,17 @@ namespace Prime31.ZestKit
 
 
 		/// <summary>
-		/// removes the tween at index from the active tweens list.
-		/// </summary>
-		/// <param name="tween">Tween.</param>
-		/// <param name="index">Index.</param>
-		public void removeTween( ITweenable tween, int index )
-		{
-			_activeTweens.RemoveAt( index );
-			tween.recycleSelf();
-		}
-
-
-		/// <summary>
-		/// removes a tween from the active tweens list. List.Remove can be quite slow so it is preferable to sue the other
-		/// removeTween variant.
+		/// removes a tween from the active tweens list
 		/// </summary>
 		/// <param name="tween">Tween.</param>
 		public void removeTween( ITweenable tween )
 		{
-			_activeTweens.Remove( tween );
 			tween.recycleSelf();
+			_activeTweens.Remove( tween );
+
+			// make sure it doesn't get updated if we are in the update loop
+			if( _isUpdating )
+				_removedTweens.Add( tween );
 		}
 
 
