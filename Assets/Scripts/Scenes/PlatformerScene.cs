@@ -35,7 +35,7 @@ namespace App
             if (!SetupDone)
             {
                 // Everything that needs at least the processors to be set up should go in there
-                var mapFile = Resources.Load<TextAsset>("Levels/level-002");
+                var mapFile = Resources.Load<TextAsset>("Levels/level-003");
                 Debug.Log(mapFile);
                 var tiledMap = new TmxMap(mapFile.text);
                 Debug.Log(tiledMap);

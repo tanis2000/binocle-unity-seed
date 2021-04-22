@@ -24,7 +24,7 @@ namespace App.Platformer
             e.gameObject.layer = LayerMask.NameToLayer("Heroes");
             e.SpawnPosition = startingPosition;
             e.AddComponent<InputComponent>();
-            e.CollisionLayersMask = 1 << LayerMask.NameToLayer("Blocks");
+            e.CollisionLayersMask = 1 << LayerMask.NameToLayer("Blocks") | 1 << LayerMask.NameToLayer("Enemies");
             var ce = Game.Scene.CreateEntity("sprite");
             ce.SetParent(e);
             var sr = ce.AddComponent<SpriteRenderer>();
@@ -168,6 +168,11 @@ namespace App.Platformer
                     foreach(var obj in layer.Objects) {
                         var pos = new Vector2((float)obj.X, (map.Height - 1) * map.TileHeight - (float)obj.Y);
                         CreatePidgeon(parent, pos);
+                    }
+                } else if (layer.Name == "pigs") {
+                    foreach(var obj in layer.Objects) {
+                        var pos = new Vector2((float)obj.X, (map.Height - 1) * map.TileHeight - (float)obj.Y);
+                        CreatePig(parent, pos);
                     }
                 }
             }
@@ -447,6 +452,43 @@ namespace App.Platformer
             sa.name = "idle";
             sa.id = 0;
             sa.sequenceCode = "0-1:forever";
+            spriteAnimator.AddAnimation(sa);
+
+            spriteAnimator.Play("idle");
+            return e;
+        }
+
+        public static Entity CreatePig(Entity parent, Vector2 startingPosition)
+        {
+            var e = Game.Scene.CreateEntity<Pig>("pig");
+            e.SetParent(parent);
+            e.gameObject.layer = LayerMask.NameToLayer("Enemies");
+            e.CollisionLayersMask = 1 << LayerMask.NameToLayer("Heroes") | 1 << LayerMask.NameToLayer("Blocks");
+            var ce = Game.Scene.CreateEntity("sprite");
+            ce.SetParent(e);
+            var sr = ce.AddComponent<SpriteRenderer>();
+            sr.sortingLayerName = "units";
+            var c = e.AddComponent<BoxCollider2D>();
+            c.size = new Vector2(8, 8);
+            ce.AddComponent<ScaleComponent>();
+            e.transform.localPosition = startingPosition;
+            var spriteAnimator = ce.AddComponent<SpriteAnimator>();
+            SpriteAnimation sa = new SpriteAnimation ();
+            sa.fps = 6;
+            var res = Resources.LoadAll<Sprite>("Sprites/pig");
+            sa.AddFrame(res[0]);
+            sa.name = "idle";
+            sa.id = 0;
+            sa.sequenceCode = "0-0:forever";
+            spriteAnimator.AddAnimation(sa);
+
+            sa = new SpriteAnimation ();
+            sa.fps = 6;
+            sa.AddFrame(res[0]);
+            sa.AddFrame(res[1]);
+            sa.name = "walk";
+            sa.id = 1;
+            sa.sequenceCode = "0-1";
             spriteAnimator.AddAnimation(sa);
 
             spriteAnimator.Play("idle");

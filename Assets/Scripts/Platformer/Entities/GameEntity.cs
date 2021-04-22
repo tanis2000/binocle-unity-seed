@@ -73,6 +73,12 @@ namespace App.Platformer
             return PixelCollisions.CollideCheck(transform.position.x + x, transform.position.y + y, coll.bounds.size.x, coll.bounds.size.y, CollisionLayersMask, oc);
         }
 
+        protected bool CollideCheck(float x, float y)
+        {
+            var coll = GetComponent<Collider2D>();
+            return PixelCollisions.CollideCheck(transform.position.x + x, transform.position.y + y, coll.bounds.size.x, coll.bounds.size.y, CollisionLayersMask);
+        }
+
         public void Flash()
         {
             if (!Flashing) {

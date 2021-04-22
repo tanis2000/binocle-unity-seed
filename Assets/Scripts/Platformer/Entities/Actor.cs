@@ -46,6 +46,16 @@ namespace App.Platformer
             return CollideCheck(solid, 0, - 1);
         }
 
+        public virtual bool IsRiding(Pig pig)
+        {
+            return CollideCheck(pig, 0, - 1);
+        }
+
+        public bool CheckBelow()
+        {
+            return CollideCheck(Vector2.down.x, Vector2.down.y);
+        }
+
         public void Move(Vector2 amount, Action<Solid> onCollideH = null, Action<Solid> onCollideV = null)
         {
             MoveH(amount.x, onCollideH);

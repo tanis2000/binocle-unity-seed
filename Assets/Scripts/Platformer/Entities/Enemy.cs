@@ -6,6 +6,7 @@ namespace App.Platformer
     public class Enemy : Actor
     {
         public Vector2 SightCheckOffset;
+        public Vector2 Speed;
 
         public int Health { get; protected set; }
 
